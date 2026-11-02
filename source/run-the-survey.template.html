@@ -186,7 +186,7 @@ details.legend[open] summary::before{transform:rotate(45deg)}
 @keyframes pop{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
 .empty{color:var(--muted);font-size:var(--fs-sm);grid-column:1/-1;padding:16px 0;text-align:center}
 .weeks{margin:0 0 8px;display:flex;flex-direction:column;align-items:center;gap:4px}
-.weeks .now{font-size:var(--h3);font-weight:700;min-height:1.3em}
+.weeks .now{font-size:var(--fs-md);font-weight:600;min-height:1.3em}
 .weeks ol{list-style:none;padding:0;margin:0;display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
 .weeks .wks{display:flex;gap:6px;flex-wrap:wrap}
 .weeks .wk{font:inherit;border:1px solid var(--rule);border-radius:8px;padding:4px 10px;font-size:var(--fs-sm);color:var(--muted);min-width:56px;text-align:center;background:#fff;cursor:pointer}
@@ -213,9 +213,11 @@ details.legend[open] summary::before{transform:rotate(45deg)}
 .titlerow h3{margin:0}
 .rungrp{display:flex;flex-direction:column;align-items:center;gap:6px;margin:8px 0 12px;text-align:center}
 .rungrp .btn{min-width:240px;font-size:var(--fs-lg);padding:12px 24px}
-.rungrp .lead{font-weight:600}
+.rungrp .lead{font-weight:600;font-size:var(--fs-md)}
 details.src .key p{font-size:var(--fs-sm);color:var(--text)}
 #meter-wrap.ghost{display:none}
+#run-card .runbody{scroll-margin-top:calc(var(--header-h) + env(safe-area-inset-top,0px) + 150px)}
+.fixcard{scroll-margin-top:calc(var(--header-h) + env(safe-area-inset-top,0px) + 12px)}
 .rungrp .btn{min-width:196px;justify-content:center}
 .rungrp .sub{margin:0}
 /* What-if possibilities as pills inside the run card, after the run */
@@ -226,6 +228,9 @@ details.src .key p{font-size:var(--fs-sm);color:var(--text)}
 .whatif h4{justify-content:flex-start;text-align:left}
 .whatif .tone{margin-top:10px}
 .statrow{display:flex;align-items:baseline;gap:4px 16px;flex-wrap:wrap;margin-top:8px}
+.statrow.full{flex-wrap:nowrap;white-space:nowrap;overflow:hidden;margin:0 0 10px}
+.fixcard .statrow{margin:0 0 10px}
+@media (max-width:560px){.statrow.full{flex-wrap:wrap;white-space:normal}}
 .statrow .status,.statrow .pct{margin:0}
 
 .card.flock-panel{padding-top:10px}
@@ -288,29 +293,27 @@ legend.qrow .chip{align-self:center}
 .tip > button{all:unset;cursor:help;width:24px;height:24px;border-radius:50%;color:var(--muted);display:inline-flex;align-items:center;justify-content:center}
 .tip > button:focus-visible{outline:3px solid var(--purple);outline-offset:2px}
 .tip > button svg{width:22px;height:22px}
-.tip .bubble{position:absolute;right:0;bottom:calc(100% + 8px);background:#202020;color:#fff;font-size:var(--fs-sm);font-weight:300;line-height:1.4;padding:8px 10px;border-radius:8px;width:min(340px,80vw);z-index:6;display:none;outline:1px solid #fff}
-.tip .bubble::after{content:"";position:absolute;right:6px;top:100%;border:7px solid transparent;border-top-color:#202020}
+.tip .bubble{position:absolute;left:0;bottom:calc(100% + 8px);background:#202020;color:#fff;font-size:var(--fs-sm);font-weight:300;line-height:1.4;padding:8px 10px;border-radius:8px;width:min(340px,80vw);z-index:6;display:none;outline:1px solid #fff}
+.tip.r .bubble{left:auto;right:0}
+.tip.r .bubble::after{left:auto;right:6px}
+.readout .tip > button{width:20px;height:20px;vertical-align:middle;margin-right:4px}
+.readout .tip > button svg{width:18px;height:18px}
+.tip .bubble::after{content:"";position:absolute;left:6px;top:100%;border:7px solid transparent;border-top-color:#202020}
 .tip:hover .bubble,.tip:focus-within .bubble{display:block}
 .meter .track{position:relative;height:14px;background:var(--panel);border:1px solid var(--rule);border-radius:7px;margin:34px 10px 30px}
+.meter .tag{position:absolute;transform:translateX(-50%);font-size:var(--fs-xs);white-space:nowrap;transition:left .6s;font-weight:600}
+.meter .tag.truth{top:-32px;color:var(--takeaway)}
+.meter .tag.est{top:18px;color:var(--purple);border:2px solid var(--purple);border-radius:6px;padding:1px 6px;background:#fff}
+.meter .tag.base{top:-32px;color:var(--muted);font-weight:400}
 .meter .gap{position:absolute;top:0;bottom:0;background:var(--amber-tint);border-left:1px dashed var(--amber-text);border-right:1px dashed var(--amber-text);transition:left .6s,width .6s}
 .meter .pin{position:absolute;top:50%;width:4px;height:30px;border-radius:2px;transform:translate(-50%,-50%);transition:left .6s}
 .meter .pin.truth{background:var(--takeaway)}
 .meter .pin.est{background:var(--purple)}
-.meter .tag{position:absolute;transform:translateX(-50%);font-size:var(--fs-xs);white-space:nowrap;transition:left .6s;font-weight:600}
-.meter .tag.truth{top:-32px;color:var(--takeaway)}
-.meter .tag.est{top:18px;color:var(--purple);border:2px solid var(--purple);border-radius:6px;padding:1px 6px;background:#fff}
 .meter .basepin{position:absolute;top:50%;width:0;height:30px;border-left:2px dashed var(--mid-gray);transform:translate(-50%,-50%);transition:left .6s}
-.meter .tag.base{top:-32px;color:var(--muted);font-weight:400}
 .meter .ticks{display:flex;justify-content:space-between;font-size:var(--fs-xs);color:var(--muted);margin:0 10px}
 .meter .readout{display:flex;gap:4px 20px;flex-wrap:wrap;margin:2px 0 0;font-size:var(--fs-md)}
 .meter .readout b{font-weight:600}
 .meter .readout .gapval{color:var(--amber-text)}
-.meter button.pinbtn{all:unset;position:absolute;top:50%;width:4px;height:30px;border-radius:2px;transform:translate(-50%,-50%);cursor:help;transition:left .6s}
-.meter button.pinbtn:focus-visible{outline:3px solid var(--purple);outline-offset:3px}
-.meter button.pinbtn.truth{background:var(--takeaway)} .meter button.pinbtn.est{background:var(--purple)}
-.head.hi{outline:2px solid var(--takeaway);outline-offset:1px;border-radius:30%}
-.head.hi2{outline:2px solid var(--purple);outline-offset:1px;border-radius:30%}
-.flock.sample .head.hi2{outline-width:3px}
 
 /* Share chart (judge page): one proportion as a thin bar with the headline number. */
 .share{display:grid;grid-template-columns:auto minmax(0,1fr);gap:2px 16px;align-items:center;margin-bottom:4px}
@@ -353,16 +356,11 @@ legend.qrow .chip{align-self:center}
 .recap h4{margin:0}
 .recap .bias{font-weight:600;color:var(--purple);margin-top:-6px}
 .recap .funnel{margin-top:0}
-.recap .funnel .st{min-width:96px;padding:6px 8px}
+.recap .funnel .st{min-width:96px;min-height:124px;padding:6px 8px}
 .recap .funnel .st .n{font-size:var(--h4)}
 .recap .funnel .st .lbl{font-size:var(--fs-xs)}
 .recap .tried{margin-top:2px}
 .recap p{font-size:var(--fs-sm)}
-.cmp-wrap{overflow-x:auto;margin-top:10px}
-.cmp{width:100%;border-collapse:collapse;font-size:var(--fs-sm);min-width:520px}
-.cmp th,.cmp td{border:1px solid var(--rule);padding:8px 10px;text-align:left;vertical-align:top}
-.cmp th{font-weight:600;background:var(--panel)}
-.cmp thead th{background:var(--purple-tint);color:var(--purple)}
 .tk{background:var(--takeaway-tint);border-radius:12px;overflow:hidden;box-shadow:0 2px 6px rgba(0,0,0,.15)}
 .tk .band{margin:0;padding:12px 16px;background:var(--takeaway);color:#fff;font-size:var(--h3);font-weight:700;line-height:1.3}
 .tk .body{padding:16px;display:flow-root}
@@ -372,7 +370,10 @@ legend.qrow .chip{align-self:center}
 /* Ranking (fix page) */
 .rank{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
 .rrow{display:flex;align-items:center;gap:12px;border:2px solid var(--option-border);border-radius:9px;padding:8px 10px 8px 14px;background:#fff}
-.rrow .pos{width:28px;height:28px;border-radius:50%;background:var(--purple);color:#fff;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex:none}
+.rrow .rnum{width:64px;height:40px;border:2px solid var(--option-border);border-radius:8px;font:inherit;font-weight:700;font-size:var(--h4);text-align:center;color:var(--purple);background:#fff;flex:none;cursor:pointer;padding:0 4px}
+.rrow .rnum:focus-visible{outline:3px solid var(--purple);outline-offset:2px}
+.rrow .rnum:disabled{color:var(--muted);background:var(--panel)}
+.rrow.ok .rnum:disabled{color:var(--green-text);border-color:var(--green)}
 .rrow .rl{flex:1;min-width:0}
 .rrow .rl small{display:block;color:var(--muted);font-size:var(--fs-sm)}
 .rrow .ctl{display:flex;gap:4px;flex:none}
@@ -474,7 +475,7 @@ const R1_TRUTH = GROUPS.filter(g=>g.score>=4).reduce((a,g)=>a+g.n,0) / N; // 0.2
 const ENROL = {               // probability of signing up, by health group
   base:      [.70,.50,.33,.17,.00],
   more:      [.70,.50,.33,.17,.00],
-  motivate:  [.75,.55,.40,.30,.10],
+  motivate:  [.90,.70,.45,.30,.10],
   pay:       [.80,.62,.45,.30,.15],
   monitor:   [.70,.52,.45,.40,.33],
   outreach:  [.62,.58,.52,.48,.40],
@@ -521,13 +522,11 @@ const DOI_UYBICO = 'https://doi.org/10.1007/s11606-007-0126-3';
 const ext = (href, text) => `<a href="${href}" target="_blank" rel="noopener">${text}<span class="vh"> (opens in a new tab)</span></a>`;
 const STUDY1 = `<p><b>UK Biobank</b> mailed invitations to about 9.2 million adults aged 40 to 69 living near one of 22 assessment centers in England, Wales and Scotland. About <b>5.5%</b> took part. The cohort is used to estimate how common diseases and risk factors are, and how they relate.</p>
 <p>${ext(DOI_FRY, 'Fry and colleagues (2017)')} compared the people who joined with the general population of the same ages. Those who joined were:</p>
-<ul><li>less likely to be obese, to smoke, or to drink alcohol daily, with fewer self-reported health conditions;</li><li>more likely to be older, female, and living in less deprived areas;</li><li>much less likely to die: at ages 70 to 74, all-cause mortality was 46% lower in men and 56% lower in women than in the general population.</li></ul>
-<p class="cite">Fry A et al. Comparison of sociodemographic and health-related characteristics of UK Biobank participants with those of the general population. Am J Epidemiol 2017;186:1026-34. ${ext(DOI_FRY, 'doi:10.1093/aje/kwx246')}</p>`;
+<ul><li>less likely to be obese, to smoke, or to drink alcohol daily, with fewer self-reported health conditions;</li><li>more likely to be older, female, and living in less deprived areas;</li><li>much less likely to die: at ages 70 to 74, all-cause mortality was 46% lower in men and 56% lower in women than in the general population.</li></ul>`;
 const STUDY2 = `<p><b>Remote smartphone studies</b> enroll people through an app and ask them to complete check-ins over weeks or months. ${ext(DOI_PRATAP, 'Pratap and colleagues (2020)')} pooled eight such studies run between 2014 and 2019, covering more than <b>100,000 participants</b> and about 3.5 million remote assessments.</p>
 <p>Who kept responding was not random:</p>
 <ul><li>median retention across the studies was only <b>5.5 days</b> (range 2 to 26 days);</li><li>people who <b>had the clinical condition</b> being studied stayed about 7 days longer than controls;</li><li>older participants stayed about 4 days longer;</li><li>compensation added about 22 days (in the one study that offered it) and referral by a clinician about 40 days;</li><li>most of the studies could not recruit a sample that matched the population demographically or regionally.</li></ul>
-<p>In this round the 40 ravens stand in for everyone enrolled in one such study. Every one of them is asked to complete a symptom check-in each week for six weeks. Each face shows that person's true symptom level.</p>
-<p class="cite">Pratap A et al. Indicators of retention in remote digital health studies: a cross-study evaluation of 100,000 participants. npj Digit Med 2020;3:21. ${ext(DOI_PRATAP, 'doi:10.1038/s41746-020-0224-8')}</p>`;
+<p>In this round the 40 ravens stand in for everyone enrolled in one such study. Every one of them is asked to complete a symptom check-in each week for six weeks. Each face shows that person's true symptom level.</p>`;
 const UNUSED_EVIDENCE = `<p>The size of each remedy's effect in this prototype is illustrative. The direction comes from these sources:</p>
 <ul>
 <li>${ext(DOI_EDWARDS, 'Edwards et al. (2009)')}, Cochrane review of 481 trials of ways to raise questionnaire response. Odds of response with a monetary incentive 1.87 (95% CI 1.73 to 2.04); with a shorter questionnaire 1.64 (1.43 to 1.87) by post and 1.73 (1.40 to 2.13) online; with follow-up contact 1.35 (1.18 to 1.55); with an offer of the survey results 1.36 (1.15 to 1.61) online.</li>
@@ -563,7 +562,6 @@ const LEAK1 = {
     { id:'invite',   lbl:'Invited',   note:'adults aged 40 to 69, one letter each', why:'Everyone on the list got the same letter. The invitation did not pick anyone out.' },
     { id:'enrol',    lbl:'Signed up', note:'the people who chose to take part', correct:true },
     { id:'followup', lbl:'Assessed',  note:'everyone who signed up was measured', why:'Nobody dropped out between signing up and being assessed. The numbers did not change here.' },
-    { id:'analysis', lbl:'Estimate',  note:'share in poorer health among those assessed', why:'The arithmetic was fine. The estimate is an honest average of a skewed sample.' },
   ],
   takeawayTitle: 'Volunteer bias',
   takeaway: 'Only people who choose to take part are counted, and that choice is tied to the thing being studied. UK Biobank is enormous, yet its participants are so much healthier than the population that death rates in the cohort run about half the national rate. Size did not fix that, because the 5.5% who volunteered were never a random 5.5%.',
@@ -573,7 +571,6 @@ const LEAK2 = {
     { id:'enrol',    lbl:'Enrolled',  note:'everyone in the study', why:'The people who enrolled were a fair mix of symptom levels. The sample was right at the start.' },
     { id:'week1',    lbl:'Answered in week 1', note:'nearly everyone', why:'Week 1 heard from nearly everyone, and the mix still matched the people enrolled.' },
     { id:'followup', lbl:'Still answering in week 6', note:'the people who kept responding', correct:true },
-    { id:'analysis', lbl:'Estimate',  note:'average symptom score of week 6 responders', why:'The averaging was fine. The estimate is an honest average of a thinned-out sample.' },
   ],
   takeawayTitle: 'Non-response bias',
   takeaway: 'The people who answer differ systematically from the people who do not. Here the people who stopped were the ones with fewer symptoms, and their silence pushed the average up week by week. The study started with the right people and lost the wrong ones.',
@@ -682,41 +679,46 @@ const stripHTML = (round) => `<section class="card strip flock-panel"><div class
   <div class="flock" id="pop">${flockHTML()}</div>${legendHTML(round)}</section>`;
 const wireLegend = () => { const d = $('#legend'); if (d) d.addEventListener('toggle', () => { state.legendOpen = d.open; }); };
 /* The meter. The truth and estimate pins are buttons: hovering or focusing one outlines the ravens it counts. */
+/* A small (i) with a tooltip. `side` is 'r' when the bubble should open leftward (anchored to its right edge). */
+const tipHTML = (id, label, text, side='l') => `<span class="tip ${side}"><button type="button" aria-describedby="${id}" aria-label="${label}">${icon('i-info')}</button><span class="bubble" role="tooltip" id="${id}">${text}</span></span>`;
 function meterHTML(cfg){
-  return `<div class="meter" id="meter"><div class="mtitle"><h4>${cfg.title}</h4><span class="tip"><button type="button" aria-describedby="meter-how" aria-label="How these numbers are computed">${icon('i-info')}</button><span class="bubble" role="tooltip" id="meter-how">${cfg.how} Hover over or focus a marker to see which ravens it counts.</span></span></div>
-    <div class="readout"><span>True value <b>${cfg.fmt(cfg.truth)}</b></span><span id="m-est-read">Estimate <b>not yet run</b></span><span id="m-gap-read"></span></div>
+  return `<div class="meter" id="meter"><div class="mtitle"><h4>${cfg.title}</h4></div>
+    <div class="readout"><span>${tipHTML('tip-truth', 'What the true value is', cfg.tipTruth)}True value <b>${cfg.fmt(cfg.truth)}</b></span><span id="m-est-read">${tipHTML('tip-est', 'What the estimate is', cfg.tipEst)}Estimate <b>not yet run</b></span><span id="m-gap-read"></span></div>
     <div class="track"><div class="gap" id="m-gap"></div>
-      <button type="button" class="pinbtn truth" id="m-truth" aria-label="True value ${cfg.fmt(cfg.truth)}. ${cfg.hiTruth}"></button><div class="tag truth" id="m-truth-tag">True value: ${cfg.fmt(cfg.truth)}</div>
+      <div class="pin truth" id="m-truth"></div><div class="tag truth" id="m-truth-tag">True value: ${cfg.fmt(cfg.truth)}</div>
       <div class="basepin" id="m-base" hidden></div><div class="tag base" id="m-base-tag" hidden></div>
-      <button type="button" class="pinbtn est" id="m-est" hidden aria-label="${cfg.estLabel}. ${cfg.hiEst}"></button><div class="tag est" id="m-est-tag" hidden></div></div>
+      <div class="pin est" id="m-est" hidden></div><div class="tag est" id="m-est-tag" hidden></div></div>
     <div class="ticks">${cfg.ticks.map(t=>`<span>${t}</span>`).join('')}</div></div>`;
 }
-function wireMeter(cfg, round, sampleSel='#sample .head'){
-  const hi = (sel, cls, on) => $$(sel).forEach(h => h.classList.toggle(cls, on && (round===2 || POOR.has(h.dataset.id))));
-  const truth = $('#m-truth'), est = $('#m-est');
-  ['mouseenter','focus'].forEach(ev => { truth.addEventListener(ev, () => hi('#pop .head', 'hi', true)); est.addEventListener(ev, () => hi(sampleSel, 'hi2', true)); });
-  ['mouseleave','blur'].forEach(ev => { truth.addEventListener(ev, () => hi('#pop .head', 'hi', false)); est.addEventListener(ev, () => hi(sampleSel, 'hi2', false)); });
+/* Keep a tooltip bubble inside the viewport: flip it to open leftward if its right edge would overflow. */
+function fitTips(root=document){
+  $$('.tip', root).forEach(t => { const show = () => { const b = $('.bubble', t); t.classList.remove('r'); const r = b.getBoundingClientRect(); if (r.right > window.innerWidth - 8) t.classList.add('r'); }; t.addEventListener('mouseenter', show); t.addEventListener('focusin', show); });
 }
 function setMeter(cfg, est){
   const pct = v => ((v - cfg.min) / (cfg.max - cfg.min)) * 100;
   $('#m-truth').style.left = pct(cfg.truth) + '%'; $('#m-truth-tag').style.left = pct(cfg.truth) + '%';
   const e = $('#m-est'), t = $('#m-est-tag');
-  if (est == null) { e.hidden = true; t.hidden = true; $('#m-gap').style.width = '0'; $('#m-gap').hidden = true; $('#m-est-read').innerHTML = 'Estimate <b>none, nobody answered</b>'; $('#m-gap-read').innerHTML = ''; return; }
+  if (est == null) { e.hidden = true; t.hidden = true; $('#m-gap').style.width = '0'; $('#m-gap').hidden = true; $('#m-est-read').innerHTML = `${tipHTML('tip-est', 'What the estimate is', cfg.tipEst)}Estimate <b>none, nobody answered</b>`; $('#m-gap-read').innerHTML = ''; fitTips($('#meter')); return; }
   e.hidden = false; t.hidden = false;
   e.style.left = pct(est) + '%'; t.style.left = pct(est) + '%'; t.textContent = cfg.estLabel + ': ' + cfg.fmt(est);
   const g = $('#m-gap'); g.hidden = false; const lo = Math.min(pct(est), pct(cfg.truth)), hi = Math.max(pct(est), pct(cfg.truth));
   g.style.left = lo + '%'; g.style.width = (hi - lo) + '%';
-  $('#m-est-read').innerHTML = `Estimate <b>${cfg.fmt(est)}</b>`;
-  $('#m-gap-read').innerHTML = `Gap <b class="gapval">${cfg.fmtGap(est - cfg.truth)}</b>`;
+  $('#m-est-read').innerHTML = `${tipHTML('tip-est', 'What the estimate is', cfg.tipEst)}Estimate <b>${cfg.fmt(est)}</b>`;
+  $('#m-gap-read').innerHTML = `${tipHTML('tip-gap', 'What the gap is', cfg.tipGap)}Gap <b class="gapval">${cfg.fmtGap(est - cfg.truth)}</b>`;
+  fitTips($('#meter'));
 }
 /* Faint dashed marker for the no-remedy estimate, so a remedy's movement has a reference point. */
 function setBasePin(cfg, est){ const pct = v => ((v - cfg.min) / (cfg.max - cfg.min)) * 100; const b = $('#m-base'), t = $('#m-base-tag'); b.hidden = false; t.hidden = false; b.style.left = pct(est)+'%'; t.style.left = pct(est)+'%'; t.textContent = 'No remedy: ' + cfg.fmt(est); }
 const METER1 = { title:'Share in poorer health', min:0, max:.5, truth:R1_TRUTH, ticks:['0%','10%','20%','30%','40%','50%'], estLabel:'Cohort\'s estimate', fmt:v=>Math.round(v*100)+'%', fmtGap:v=>(v>=0?'+':'')+Math.round(v*100)+' points',
-  how:'How these are computed: the true value is the share of all 40 invited ravens whose face is 4 or 5 (9 of 40). The estimate is the same share among only the ravens who signed up. The flock is hypothetical and built to show the pattern UK Biobank found, not its actual figures.',
-  hiTruth:'Highlights the 9 invited ravens in poorer health.', hiEst:'Highlights the ravens in poorer health who signed up.' };
+  how:'The 40 ravens are a hypothetical population built to show the pattern UK Biobank found, not its actual figures. Each face is a true health score the study cannot see until that person takes part.',
+  tipTruth:'The share of all 40 invited ravens whose face is 4 or 5: 9 of 40, or 23%. A study could only know this if every invitee took part.',
+  tipEst:'The same share counted only among the ravens who signed up. This is the number the study actually sees.',
+  tipGap:'Estimate minus true value, in percentage points. Negative means the cohort understates poor health; positive means it overstates it.' };
 const METER2 = { title:'Average symptom score (1 to 5)', min:1, max:5, truth:R2_TRUTH, ticks:['1','2','3','4','5'], estLabel:'Study\'s estimate', fmt:v=>v.toFixed(2), fmtGap:v=>(v>=0?'+':'')+v.toFixed(2),
-  how:'How these are computed: the true value is the average face score of all 40 enrolled ravens. The estimate is the average among only the ravens who answered that week. The flock is hypothetical and built to show the pattern Pratap and colleagues found, not their actual figures.',
-  hiTruth:'Highlights all 40 enrolled ravens.', hiEst:'Highlights the ravens who answered in week 6.' };
+  how:'The 40 ravens are a hypothetical population built to show the pattern Pratap and colleagues found, not their actual figures. Each face is a true symptom score the study cannot see until that person answers.',
+  tipTruth:'The average face score of all 40 enrolled ravens: 2.50. A study could only know this if everyone answered.',
+  tipEst:'The average face score among only the ravens who answered that week. This is the number the study actually sees.',
+  tipGap:'Estimate minus true value. Positive means the study overstates symptoms; negative means it understates them.' };
 
 /* `knocked` lists option ids already tried and ruled out: mid grey, locked, stated in text. */
 /* `expl(o)` returns the explanation to reveal inside that option's card (ExplainedOption pattern), or '' for none.
@@ -740,10 +742,10 @@ function simPanelsHTML(round, runLabel, leftTop='', { meterHidden=false } = {}){
   const cfg = round===1 ? METER1 : METER2;
   const SCEN = round===1 ? SCEN1 : SCEN2;
   const sampleCard = `<section class="card flock-panel sample-panel" id="run-card">
-      <div class="rungrp"><p class="lead">${round===1?'40 invitations are ready to go out.':'40 people are enrolled and the first check-in is ready to send.'}</p>${runLabel?`<button type="button" class="btn primary" id="run-btn">${icon('i-play')} ${runLabel}</button>`:''}<p class="sub" id="sample-sub"></p></div><div class="runbody"><div>
+      <div class="rungrp"><p class="lead">${round===1?'40 invitations are ready to go out.':'40 people are enrolled and the first check-in is ready to send.'}</p>${runLabel?`<button type="button" class="btn primary" id="run-btn">${icon('i-play')} ${runLabel}</button>`:''}<p class="sub" id="sample-sub"></p></div><div class="statrow full" id="statrow" ${meterHidden?'hidden':''}><div class="status" id="stage-now"></div><div class="pct" id="sample-pct"></div></div><div class="runbody"><div>
       <div id="run-out" ${meterHidden?'hidden':''}>${round===2?`<div class="weeks" id="weeks"><div class="now" id="week-now">&nbsp;</div><span class="hint">After the run, select a week to look at it again.</span><div class="wks" role="group" aria-label="Weeks" id="wks">${Array.from({length:6},(_,i)=>`<button type="button" class="wk" id="wk-${i+1}" data-w="${i+1}" disabled>Week ${i+1}</button>`).join('')}</div></div>`:''}
       <div class="flock sample" id="sample"></div></div>
-      <div class="statrow">${round===2?'':'<div class="status" id="stage-now"></div>'}<div class="pct" id="sample-pct"></div></div></div>
+      </div>
       <div id="meter-wrap" class="${meterHidden?'ghost':''}">${meterHTML(cfg)}</div></div>
       <div class="whatif" id="whatif" hidden><h4>What if a different group had ${round===1?'signed up':'kept answering'}? <span class="sub">Switch through each possibility to see where the estimate would land. <b id="seen-count"></b></span></h4>
         <div class="pills" role="group" aria-label="Possibilities" id="scen-pills"></div><div id="scen-note"></div></div>
@@ -818,7 +820,7 @@ function runSim(round, remedy, { instant=false, onDone } = {}){
       if (res.invited) $$('#pop .head').forEach(h => { if (!res.invited.has(h.dataset.id)) h.classList.add('out'); });
       for (let k=1;k<=6;k++){ const li=$('#wk-'+k); li.classList.toggle('done', k<w); li.classList.toggle('now-wk', k===w); }
       $('#week-now').textContent = `Week ${w} of 6`;
-      $('#sample-pct').textContent = `${wk.ids.length} of ${res.invited?20:40} answered (${Math.round(wk.ids.length/(res.invited?20:40)*100)}%)`;
+      $('#stage-now').textContent = `${wk.ids.length} of ${res.invited?20:40} answered in week ${w}`; $('#sample-pct').textContent = `${Math.round(wk.ids.length/(res.invited?20:40)*100)}% of the people ${res.invited?'prompted':'enrolled'}`;
       $('#sample-sub').textContent = `${(res.invited?20:40)-wk.ids.length} ${res.invited?'prompted ':''}people did not answer this week`;
       setMeter(cfg, wk.mean);
       if (!auto) { live(`Week ${w}: ${wk.ids.length} answered. Estimate ${cfg.fmt(wk.mean)}.`); return; }
@@ -908,7 +910,7 @@ function renderRun(round, bar){
     ${simPanelsHTML(round, round===1?'Run the study':'Run the six weeks', '', { meterHidden:!R.ran })}
   </div>`;
   setMeter(cfg, null);
-  wireMeter(cfg, round); wireLegend();
+  fitTips(); wireLegend();
   const runBtn = $('#run-btn');
   /* Comparison after the run: rerun instantly with each possibility. The gate waits until all have been seen. */
   const sp = $('#scen-pills');
@@ -934,7 +936,7 @@ function renderRun(round, bar){
   const wks = $('#wks'); if (wks) wks.addEventListener('click', e => { const b = e.target.closest('.wk'); if (!b || b.disabled || !showWeek) return; showWeek(+b.dataset.w); });
   showWhatIf();
   if (R.ran) { const s = SCEN.find(x => x.id === (R.scen || 'base')); runSim(round, s.rates === 'base' ? 'base' : s.rates, { instant:true }); }
-  runBtn.addEventListener('click', () => { if (runBtn.getAttribute('aria-disabled')==='true') return; $('#meter-wrap').classList.remove('ghost'); $('#run-out').hidden = false; $('#src').hidden = false; R.scen = null; if (R.ran) drawScen(); runSim(round, 'base', { onDone(){ R.ran = true; seen('base'); showWhatIf(); renderFooter(); } }); });
+  runBtn.addEventListener('click', () => { if (runBtn.getAttribute('aria-disabled')==='true') return; requestAnimationFrame(() => { const el = $('#run-card .runbody'); if (el) el.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' }); }); $('#meter-wrap').classList.remove('ghost'); $('#run-out').hidden = false; $('#statrow').hidden = false; $('#src').hidden = false; R.scen = null; if (R.ran) drawScen(); runSim(round, 'base', { onDone(){ R.ran = true; seen('base'); showWhatIf(); renderFooter(); } }); });
 }
 
 function renderLeak(round, bar){
@@ -943,11 +945,11 @@ function renderLeak(round, bar){
   const cfg = round===1 ? METER1 : METER2;
   const res = round===1 ? simR1('base') : simR2('base');
   const est = round===1 ? res.share : res.final.mean;
-  const counts = round===1 ? [40, res.enrolled.length, res.enrolled.length, null] : [40, res.weeks[0].ids.length, res.final.ids.length, null];
+  const counts = round===1 ? [40, res.enrolled.length, res.enrolled.length] : [40, res.weeks[0].ids.length, res.final.ids.length];
   const tile = (s, i) => {
     const sel = R.leak === s.id, ko = R.leakWrong.includes(s.id), ok = R.leakDone && s.correct;
-    const cls = 'st' + (ok?' correct':'') + (ko?' knocked':'') + (sel && !ok && !ko?' selected':'') + (i===3?' result':'');
-    const n = i===3 ? `${cfg.fmt(est)} <small>vs ${cfg.fmt(cfg.truth)} true</small>` : counts[i];
+    const cls = 'st' + (ok?' correct':'') + (ko?' knocked':'') + (sel && !ok && !ko?' selected':'');
+    const n = counts[i];
     const mark = ok ? `<svg class="mark" aria-hidden="true"><use href="#i-check"/></svg><span class="vh">correct answer</span>` : ko ? `<svg class="mark" aria-hidden="true"><use href="#i-x"/></svg><span class="vh">previously selected, incorrect</span>` : '';
     const pick = (!R.leakDone && !ko) ? `<span class="pick">Select this stage</span>` : '';
     return `<button type="button" class="${cls}" data-id="${s.id}" aria-pressed="${sel?'true':'false'}" ${(R.leakDone||ko)?'disabled':''}><span class="n">${n}</span><span class="lbl">${s.lbl}</span><span class="note">${s.note}</span>${pick}${mark}</button>`;
@@ -955,8 +957,8 @@ function renderLeak(round, bar){
   main.innerHTML = `<div class="col">${bar}
     <section class="card icard"><h2>Find where the sample leaked</h2><p>${round===1?'The cohort came out far healthier than the people invited.':'The study\'s average symptom score ran high.'} In the flow chart, select the stage where the people in the sample stopped looking like the people the study is about, then say why it happened.</p><p class="claim"><b>Claim under test:</b> ${round===1?CLAIM1:CLAIM2}</p></section>
     <details class="study"><summary>Study details</summary><div class="body">${round===1?STUDY1:STUDY2}</div></details>
-    <section class="card leak-card"><h3 id="funnel-label">What the run showed. Where did the leak happen?</h3>
-      <div class="funnel" role="group" aria-labelledby="funnel-label" id="funnel">${L.stages.map((s,i)=>tile(s,i)+(i<3?'<span class="arrow" aria-hidden="true">&rarr;</span>':'')).join('')}</div>
+    <section class="card leak-card"><h3 id="funnel-label">What the run showed: an estimate of ${cfg.fmt(est)} against a true value of ${cfg.fmt(cfg.truth)}. Where did the leak happen?</h3>
+      <div class="funnel" role="group" aria-labelledby="funnel-label" id="funnel">${L.stages.map((s,i)=>tile(s,i)+(i<L.stages.length-1?'<span class="arrow" aria-hidden="true">&rarr;</span>':'')).join('')}</div>
       <div id="leak-feedback" style="margin-top:12px"></div></section>
     <div id="why-wrap" hidden><section class="card leak-card"><form id="why-form"><fieldset class="optgroup"><legend class="qrow"><span>${W.question}</span><span id="why-chip"></span></legend></fieldset>
       <div class="actions" style="margin-top:12px" id="why-actions"></div></form><div id="why-feedback" style="margin-top:12px"></div></section></div>
@@ -977,7 +979,7 @@ function renderLeak(round, bar){
   wf.addEventListener('submit', e => { e.preventDefault(); if (Y.done) return; const fresh = Y.picks.filter(id => !Y.right.includes(id)); if (!fresh.length) return;
     fresh.forEach(id => { if (W.options.find(o => o.id === id).correct) Y.right.push(id); else Y.wrong.push(id); });
     Y.picks = Y.right.slice(); Y.checks++; Y.done = need.every(id => Y.right.includes(id)); drawWhy(); renderFooter(); });
-  const redraw = () => { $('#funnel').innerHTML = L.stages.map((s,i)=>tile(s,i)+(i<3?'<span class="arrow" aria-hidden="true">&rarr;</span>':'')).join(''); wire(); };
+  const redraw = () => { $('#funnel').innerHTML = L.stages.map((s,i)=>tile(s,i)+(i<L.stages.length-1?'<span class="arrow" aria-hidden="true">&rarr;</span>':'')).join(''); wire(); };
   const drawFeedback = () => {
     if (R.leakDone) {
       $('#leak-feedback').innerHTML = `<div class="alert ok" role="status">${icon('i-check')}<div><b>Correct.</b> ${round===1?'Everyone who signed up was assessed. The sample thinned, and skewed, at the moment people decided whether to join.':'The people who enrolled were a fair mix. The sample thinned, and skewed, as people stopped answering.'} Now say why.</div></div>`;
@@ -999,54 +1001,58 @@ function renderFix(round, bar){
   const REM = round===1 ? REMEDIES1 : REMEDIES2;
   const cfg = round===1 ? METER1 : METER2;
   main.innerHTML = `<div class="col">${bar}
-    <section class="card icard"><h2>Fix it and rerun</h2><p>Choose a recruitment remedy. The ${round===1?'study':'six weeks'} reruns with it and the meter moves. Try every remedy and watch what each one does, then rank all five for this study.</p><p class="claim"><b>Claim under test:</b> ${round===1?CLAIM1:CLAIM2}</p></section>
+    <section class="card icard"><h2>Fix it and rerun</h2><p>Choose a recruitment remedy. The ${round===1?'study':'six weeks'} reruns with it and the meter moves. Keep trying until you find the remedy that closes most of the gap, then rank all five for this study.</p><p class="claim"><b>Claim under test:</b> ${round===1?CLAIM1:CLAIM2}</p></section>
     <details class="study"><summary>Study details</summary><div class="body">${round===1?STUDY1:STUDY2}</div></details>
     <section class="card flock-panel fixcard"><div class="pills" role="group" aria-label="Remedy" id="pills"></div><div class="vband" id="vband" hidden></div>
+      <div class="statrow full"><div class="status" id="stage-now">&nbsp;</div><div class="pct" id="sample-pct"></div></div><p class="sub vh" id="sample-sub"></p>
       <div class="runbody"><div><div class="tried"><h4>Estimates so far</h4><div id="tried-rows"></div><p class="cap" id="tried-cap"><i></i>True value</p></div></div>
-      <div><div class="status" id="stage-now">&nbsp;</div><div class="pct" id="sample-pct"></div><p class="sub" id="sample-sub"></p>${meterHTML(cfg)}</div></div>
+      <div>${meterHTML(cfg)}</div></div>
       <p class="evline" id="evline" hidden></p></section>
-    <section class="card rank-card" id="rank-card" hidden><div class="cardhead"><h3>Rank the remedies for this study</h3><span id="rank-chip"></span></div><p class="sub">You have tried all five. Order them from the one that closes most of the gap to the one that closes least; the estimates above are your guide. Two remedies that land in the same place can go in either order.</p>
+    <section class="card rank-card" id="rank-card" hidden><div class="cardhead"><h3>Rank the remedies for this study</h3><span id="rank-chip"></span></div><p class="sub">You found the remedy that closes most of the gap. Now choose a number for each remedy, from 1 (closes most of the gap) to 5 (closes least); the estimates above are your guide.</p>
       <ol class="rank" id="rank" aria-label="Your ranking"></ol>
       <div class="hint-wrap" id="hint-wrap"><button type="button" class="hint-pill" id="hint-btn" aria-expanded="false" aria-controls="hint-card">${icon('i-bulb')} Show Hint</button></div>
-      <div class="hint-card" id="hint-card" hidden><button type="button" class="hx" id="hint-close" aria-label="Close hint">${icon('i-close')}</button><div class="hh">${icon('i-bulb')} Hint:</div><p>In Estimates so far, the closer a bar reaches the dashed true-value line, the higher that remedy ranks. Read the bars from closest to furthest and build the order from that. Two remedies whose bars stop in the same place can go in either order.</p></div>
+      <div class="hint-card" id="hint-card" hidden><button type="button" class="hx" id="hint-close" aria-label="Close hint">${icon('i-close')}</button><div class="hh">${icon('i-bulb')} Hint:</div><p>In Estimates so far, the closer a bar reaches the dashed true-value line, the better that remedy did. The closest bar gets 1, the furthest gets 5.</p></div>
       <div class="actions" id="rank-actions"></div><div id="rank-fb" style="margin-top:12px"></div></section>
     <div id="fix-takeaway"></div>
   </div>`;
   const pills = $('#pills');
-  wireMeter(cfg, round, '#pop .head.in-s'); wireLegend();
+  fitTips(); wireLegend();
   setBasePin(cfg, round===1 ? simR1('base').share : simR2('base').final.mean);
-  const drawRankGate = () => { $('#rank-card').hidden = R.tried.length < REM.length; };
+  const drawRankGate = () => { $('#rank-card').hidden = !R.best; };
   const drawPills = () => { drawRankGate(); pills.innerHTML = REM.map(r => `<button type="button" class="pill" data-id="${r.id}" aria-pressed="${R.remedy===r.id?'true':'false'}" title="${r.text}">${r.short}${R.tried.includes(r.id)?`<svg class="${r.best?'ok':'bad'}" aria-hidden="true"><use href="#${r.best?'i-check':'i-x'}"/></svg><span class="vh">${r.best?'best remedy':'tried, not the best'}</span>`:''}</button>`).join(''); };
   /* Verdict band across the top of the result card; evidence links as a line at its foot. Both react to the pill just chosen. */
   const showResult = (rem) => { const band = $('#vband'), ev = $('#evline');
     band.hidden = !rem; ev.hidden = !(rem && rem.evidence);
     if (rem) { band.className = 'vband ' + (rem.best ? 'ok' : 'bad'); band.innerHTML = `${icon(rem.best?'i-check':'i-x')}<div><b>${rem.best?FOUND:AGAIN}</b> <span class="phrase ${rem.tone}">${rem.phrase}</span> ${rem.note}</div>`; ev.innerHTML = rem.evidence ? `<b>Evidence:</b> ${rem.evidence}` : ''; } };
   let drawRank = null;   // assigned below, once the ranking panel exists
-  const apply = () => { const rem = REM.find(r => r.id === R.remedy); applyToPanel(round, rem ? rem.id : 'base', { markNew:true }); if (rem) { if (!R.tried.includes(rem.id)) R.tried.push(rem.id); if (rem.best) R.best = true; } else $('#sample-sub').textContent = 'Baseline, no remedy. Choose one above.'; drawTried(round, R, REM); drawPills(); showResult(rem); renderFooter(); if (drawRank) drawRank(); };
+  const apply = () => { const rem = REM.find(r => r.id === R.remedy); applyToPanel(round, rem ? rem.id : 'base', { markNew:true }); if (rem) { if (!R.tried.includes(rem.id)) R.tried.push(rem.id); if (rem.best) R.best = true; } else $('#sample-sub').textContent = 'No remedy yet.'; drawTried(round, R, REM); drawPills(); showResult(rem); renderFooter(); if (drawRank) drawRank(); };
   apply();
-  pills.addEventListener('click', e => { const b = e.target.closest('.pill'); if (!b) return; R.remedy = b.dataset.id; apply(); $(`.pill[data-id="${R.remedy}"]`).focus({ preventScroll:true }); });
+  pills.addEventListener('click', e => { const b = e.target.closest('.pill'); if (!b) return; const first = R.tried.length === 0; R.remedy = b.dataset.id; apply(); $(`.pill[data-id="${R.remedy}"]`).focus({ preventScroll:true }); if (first) requestAnimationFrame(() => { const el = $('.fixcard'); if (el) el.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' }); }); });
 
-  /* Ranking: move rows up or down, then check. A row is right when its gap to the true value matches the gap at that position in the correct order, so tied remedies may swap. */
-  const K = R.rank; if (!K.order) K.order = REM.map(r => r.id);
+  /* Ranking: type a number 1 to 5 beside each remedy, then check. A remedy is right when its gap to the true value matches the gap at that rank in the correct order, so tied remedies may take either of their two numbers. */
+  const K = R.rank; if (!K.ranks) K.ranks = {};
   const gap = id => Math.abs((round===1 ? simR1(id).share : simR2(id).final.mean) - cfg.truth);
   const correctGaps = REM.map(r => gap(r.id)).sort((a,b) => a-b);
-  const rowOK = (id, i) => Math.abs(gap(id) - correctGaps[i]) < 1e-9;
-  let verdicts = null;   // per-position true/false after a check, until the order changes
+  const rankOK = (id, n) => n >= 1 && n <= REM.length && Math.abs(gap(id) - correctGaps[n-1]) < 1e-9;
+  let verdicts = null;   // {id: true/false} after a check, cleared when a number changes
+  const nums = () => REM.map(r => K.ranks[r.id]).filter(v => v);
+  const complete = () => nums().length === REM.length;
+  const dupes = () => { const seen = {}; return nums().filter(v => (seen[v] = (seen[v]||0) + 1) === 2); };
   drawRank = () => {
-    $('#rank').innerHTML = K.order.map((id, i) => { const r = REM.find(x => x.id === id); const v = verdicts ? verdicts[i] : null;
-      return `<li class="rrow ${v===true?'ok':v===false?'bad':''}" data-id="${id}"><span class="pos" aria-hidden="true">${i+1}</span><span class="rl"><span class="vh">Position ${i+1}: </span>${r.text}${R.tried.includes(id)?`<small>${cfg.fmt(round===1 ? simR1(id).share : simR2(id).final.mean)}</small>`:'<small>Not tried yet</small>'}</span>
-        ${v===null?'':`<svg class="mark" aria-hidden="true"><use href="#${v?'i-check':'i-x'}"/></svg><span class="vh">${v?'right place':'wrong place'}</span>`}
-        <span class="ctl"><button type="button" data-move="-1" aria-label="Move ${r.short} up" ${(i===0||K.done)?'disabled':''}>${icon('i-up')}</button><button type="button" data-move="1" aria-label="Move ${r.short} down" ${(i===K.order.length-1||K.done)?'disabled':''}>${icon('i-down')}</button></span></li>`; }).join('');
-    const right = verdicts ? verdicts.filter(Boolean).length : null;
-    $('#rank-chip').innerHTML = K.done ? `<span class="chip done">${icon('i-check')} Ranking complete</span>` : (verdicts ? `<span class="chip" role="status">${right} of ${K.order.length} in the right place</span>` : '');
-    $('#rank-actions').innerHTML = K.done ? '' : `<button type="button" class="btn primary" id="rank-check">${K.checks?'Check again':'Check ranking'}</button>`;
-    $('#rank-fb').innerHTML = K.done ? '' : (verdicts ? `<div class="alert bad" role="status">${icon('i-x')}<div><b>Try again.</b> The rows marked red are in the wrong place. Use the estimates above to move them, then check again.</div></div>` : '');
+    $('#rank').innerHTML = REM.map(r => { const v = verdicts ? verdicts[r.id] : null; const val = K.ranks[r.id] || '';
+      return `<li class="rrow ${v===true?'ok':v===false?'bad':''}" data-id="${r.id}"><select class="rnum" aria-label="Rank for ${r.short}, 1 is best" data-id="${r.id}" ${(K.done||v===true)?'disabled':''}><option value="">–</option>${Array.from({length:REM.length},(_,k)=>`<option value="${k+1}" ${val===k+1?'selected':''}>${k+1}</option>`).join('')}</select><span class="rl">${r.text}${R.tried.includes(r.id)?`<small>${cfg.fmt(round===1 ? simR1(r.id).share : simR2(r.id).final.mean)}</small>`:'<small>Not tried yet</small>'}</span>
+        ${v===null?'':`<svg class="mark" aria-hidden="true"><use href="#${v?'i-check':'i-x'}"/></svg><span class="vh">${v?'right':'wrong'}</span>`}</li>`; }).join('');
+    const right = verdicts ? Object.values(verdicts).filter(Boolean).length : null;
+    const dup = dupes();
+    $('#rank-chip').innerHTML = K.done ? `<span class="chip done">${icon('i-check')} Ranking complete</span>` : (verdicts ? `<span class="chip" role="status">${right} of ${REM.length} right</span>` : '');
+    $('#rank-actions').innerHTML = K.done ? '' : `<button type="button" class="btn primary" id="rank-check" aria-disabled="${complete() && !dup.length ? 'false' : 'true'}">${K.checks?'Check again':'Check ranking'}</button>`;
+    $('#rank-fb').innerHTML = K.done ? '' : dup.length ? `<div class="alert bad" role="status">${icon('i-x')}<div>Each number from 1 to ${REM.length} can be used once. ${dup.join(' and ')} ${dup.length===1?'is':'are'} used twice.</div></div>` : (verdicts ? `<div class="alert bad" role="status">${icon('i-x')}<div><b>Try again.</b> The remedies marked red have the wrong number. The right ones are locked; use the estimates above to place the rest, then check again.</div></div>` : '');
     $('#fix-takeaway').innerHTML = K.done ? `<section class="takeaway"><h3>Good strategies, different fits</h3><p>Most of these are sound recruitment strategies, and several of them belong in the same study. Which one does the most depends on where the sample leaked and who is missing. ${round===1?'Here the leak was at sign-up, among people in poorer health, so reaching them through routes they already trust did the most. Compensation and a clearer invitation still helped; more letters did nothing.':'Here the leak was in who kept answering, and the people lost were those with little to report, so cutting the burden of each check-in did the most. Payment and reminders still helped; more participants did nothing.'} In another study, with a different leak, the order could change.</p></section>` : '';
-    const b = $('#rank-check'); if (b) b.addEventListener('click', () => { verdicts = K.order.map(rowOK); K.checks++; K.done = verdicts.every(Boolean); drawRank(); renderFooter(); });
+    const b = $('#rank-check'); if (b) b.addEventListener('click', () => { if (b.getAttribute('aria-disabled')==='true') return; verdicts = {}; REM.forEach(r => { verdicts[r.id] = rankOK(r.id, Number(K.ranks[r.id])); }); K.checks++; K.done = REM.every(r => verdicts[r.id]); drawRank(); renderFooter(); });
   };
-  $('#rank').addEventListener('click', e => { const b = e.target.closest('button[data-move]'); if (!b || K.done) return; const li = b.closest('.rrow'); const i = K.order.indexOf(li.dataset.id), j = i + Number(b.dataset.move); if (j < 0 || j >= K.order.length) return;
-    [K.order[i], K.order[j]] = [K.order[j], K.order[i]]; verdicts = null; drawRank(); const nb = $(`.rrow[data-id="${li.dataset.id}"] button[data-move="${b.dataset.move}"]`); (nb && !nb.disabled ? nb : $(`.rrow[data-id="${li.dataset.id}"] button:not(:disabled)`)).focus({ preventScroll:true }); });
-  drawRank();
+  $('#rank').addEventListener('change', e => { const i = e.target.closest('select.rnum'); if (!i || K.done) return; const v = parseInt(i.value, 10); K.ranks[i.dataset.id] = (v >= 1 && v <= REM.length) ? v : null;
+    if (verdicts) { const keep = {}; REM.forEach(r => { if (verdicts[r.id] === true) keep[r.id] = true; }); verdicts = Object.keys(keep).length ? keep : null; }
+    const focusId = i.dataset.id; drawRank(); const ni = $(`select.rnum[data-id="${focusId}"]`); if (ni && !ni.disabled) { ni.focus({ preventScroll:true }); } });
   const hb = $('#hint-btn'), hc = $('#hint-card');
   hb.addEventListener('click', () => { hc.hidden = false; $('#hint-wrap').hidden = true; hb.setAttribute('aria-expanded', 'true'); $('#hint-close').focus({ preventScroll:true }); });
   $('#hint-close').addEventListener('click', () => { hc.hidden = true; $('#hint-wrap').hidden = false; hb.setAttribute('aria-expanded', 'false'); hb.focus({ preventScroll:true }); });
@@ -1059,7 +1065,11 @@ function renderTakeaways(bar){
   const arrow = '<span class="arrow" aria-hidden="true">&rarr;</span>';
   const bars = (cfg, rows) => { const pct = v => ((v - cfg.min) / (cfg.max - cfg.min)) * 100; return `<div class="tried">${rows.map(r => `<div class="trow ${r.cur?'cur':''}"><span class="tl">${r.label}</span><span class="tb" aria-hidden="true"><i style="width:${pct(r.est)}%"></i><em style="left:${pct(cfg.truth)}%"></em></span><span class="tv">${cfg.fmt(r.est)}</span></div>`).join('')}<p class="cap"><i></i>True value ${cfg.fmt(cfg.truth)}</p></div>`; };
   main.innerHTML = `<div class="col">${bar}
-    <section class="card icard"><h2>Takeaways</h2><p>Two real studies, two different leaks. Here is what each run showed, side by side, and what to carry into the next study you read or design.</p></section>
+    <section class="tk" aria-labelledby="tk-h"><h3 class="band" id="tk-h">Takeaway: A bigger sample does not fix a skewed one.</h3>
+      <div class="body"><svg class="raven" aria-hidden="true"><use href="#raven-point-left"/></svg>
+        <p>Both leaks leave a sample that differs from the population on the very thing being measured, and more of the same sample only repeats the error with more precision. Half a million UK Biobank volunteers were still about half as likely to die as the people they stood in for.</p>
+        <p>Before trusting an estimate, ask two questions at two stages: who chose to take part, and who kept answering. Compare each group with the people the study is about, and fix the stage that leaked instead of enlarging the study.</p>
+      </div></section>
     <section class="card recap-wrap"><h3>Where each study leaked</h3>
       <div class="recaps">
         <article class="recap"><div class="band"></div><h4>Round 1: UK Biobank</h4><p class="bias">Volunteer bias, at the sign-up stage</p>
@@ -1072,20 +1082,6 @@ function renderTakeaways(bar){
           ${bars(METER2, [{ label:'No remedy', est:b2.final.mean }, { label:'Two questions', est:f2.final.mean, cur:true }])}
           <p><b>Best fix:</b> cut the check-in to two questions. Lower burden keeps the people with little to report answering.</p>
         </article>
-      </div></section>
-    <section class="card"><h3>How to tell them apart</h3>
-      <div class="cmp-wrap"><table class="cmp"><thead><tr><th scope="col"></th><th scope="col">Volunteer bias</th><th scope="col">Non-response bias</th></tr></thead><tbody>
-        <tr><th scope="row">Where it leaks</th><td>Between being invited and taking part</td><td>Between enrolling and answering</td></tr>
-        <tr><th scope="row">Who is missing</th><td>People who never opt in. Here, the less healthy.</td><td>People who stop responding. Here, the least symptomatic.</td></tr>
-        <tr><th scope="row">What it does to the estimate</th><td>Prevalence read off the cohort runs low: ${METER1.fmt(b1.share)} against a true ${METER1.fmt(R1_TRUTH)}.</td><td>The average drifts toward the people who keep answering: ${METER2.fmt(b2.final.mean)} against a true ${METER2.fmt(R2_TRUTH)}.</td></tr>
-        <tr><th scope="row">How to spot it</th><td>Compare participants with the invitation list.</td><td>Compare each wave of responders with everyone enrolled.</td></tr>
-        <tr><th scope="row">What moves it</th><td>Several recruitment routes, tracking who is missing, compensation used with care.</td><td>Lower burden, reminders, compensation per check-in.</td></tr>
-        <tr><th scope="row">What does not</th><td>More invitations.</td><td>More participants, or prompting a random subset.</td></tr>
-      </tbody></table></div></section>
-    <section class="tk" aria-labelledby="tk-h"><h3 class="band" id="tk-h">Takeaway: A bigger sample does not fix a skewed one.</h3>
-      <div class="body"><svg class="raven" aria-hidden="true"><use href="#raven-point-left"/></svg>
-        <p>Both leaks leave a sample that differs from the population on the very thing being measured, and more of the same sample only repeats the error with more precision. Half a million UK Biobank volunteers were still about half as likely to die as the people they stood in for.</p>
-        <p>Before trusting an estimate, ask two questions at two stages: who chose to take part, and who kept answering. Compare each group with the people the study is about, and fix the stage that leaked instead of enlarging the study.</p>
       </div></section>
   </div>`;
 }
@@ -1122,7 +1118,7 @@ function gate(){
   if (p.kind==='predict') return R.predDone ? { ok:true } : { ok:false, msg:'Choose the correct prediction to continue' };
   if (p.kind==='run') { if (!R.ran) return { ok:false, msg:'Run the study to continue' }; const SC = p.round===1 ? SCEN1 : SCEN2; if (SC.some(x => !R.seen.includes(x.id))) return { ok:false, msg:'View each possibility to continue' }; if (!R.judge.done) return { ok:false, msg:'Judge the impact on inference to continue' }; return { ok:true }; }
   if (p.kind==='leak') { if (!R.leakDone) return { ok:false, msg:'Find where the leak happened to continue' }; if (!R.why.done) return { ok:false, msg:'Find every reason for the leak to continue' }; return { ok:true }; }
-  if (p.kind==='fix') { const REM = p.round===1 ? REMEDIES1 : REMEDIES2; if (R.tried.length < REM.length) return { ok:false, msg:'Try every remedy to continue' }; if (!R.rank.done) return { ok:false, msg:'Rank the remedies correctly to continue' }; return { ok:true }; }
+  if (p.kind==='fix') { if (!R.best) return { ok:false, msg:'Find the remedy that closes most of the gap to continue' }; if (!R.rank.done) return { ok:false, msg:'Rank the remedies correctly to continue' }; return { ok:true }; }
   return { ok:true };
 }
 function renderFooter(){
