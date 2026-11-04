@@ -170,14 +170,13 @@ details.legend[open] summary::before{transform:rotate(45deg)}
 .key .scale{display:flex;justify-content:space-between;font-size:var(--fs-xs);color:var(--muted);margin-top:8px;border-top:1px solid var(--rule);padding-top:6px}
 @media (max-width:420px){.key ol{gap:4px}.key li svg{width:30px;height:30px}}
 
-/* Flock strip: all 40 heads in one horizontal line at the top of the page. Sticks under the header on wide screens so it stays in view while the study runs. */
+/* Flock strip: all 40 heads in one line across the top of the page. Small phones fall back to four rows of 10. */
 .strip{padding:12px 20px}
 .strip .top{display:flex;flex-direction:column;gap:2px;margin-bottom:8px}
 .strip .top .sub b{color:var(--text);font-weight:600}
 .strip .top h3{font-size:var(--h4)}
 .strip .top .sub{font-size:var(--fs-sm);color:var(--muted)}
 .flock{display:grid;grid-template-columns:repeat(40,minmax(0,1fr));gap:3px}
-@media (max-width:899px){.flock{grid-template-columns:repeat(20,minmax(0,1fr))}}
 @media (max-width:559px){.flock{grid-template-columns:repeat(10,minmax(0,1fr));gap:4px}}
 .head{width:100%;aspect-ratio:1;max-width:100%;transition:opacity .5s,filter .5s;display:block;overflow:visible}
 .head.out{opacity:.2;filter:grayscale(1)}
@@ -195,6 +194,8 @@ details.legend[open] summary::before{transform:rotate(45deg)}
 .weeks .wks{display:flex;gap:6px;flex-wrap:wrap}
 .weeks .wk{font:inherit;border:1px solid var(--rule);border-radius:8px;padding:4px 10px;font-size:var(--fs-sm);color:var(--muted);min-width:56px;text-align:center;background:#fff;cursor:pointer}
 .weeks .wk:disabled{cursor:default}
+/* A still view: the heads and meter snap to a week instead of animating into it. */
+.still, .still *{transition:none!important;animation:none!important}
 .weeks .wk:not(:disabled):hover{background:var(--purple-hover)}
 .weeks .wk.done{border-color:var(--purple);background:var(--purple-tint);color:var(--text)}
 .weeks .wk.now-wk{border-color:var(--purple);background:var(--purple);color:#fff;font-weight:600}
@@ -232,9 +233,17 @@ details.src .key p{font-size:var(--fs-sm);color:var(--text)}
 .whatif h4{justify-content:flex-start;text-align:left}
 .whatif .tone{margin-top:10px}
 .statrow{display:flex;align-items:baseline;gap:4px 16px;flex-wrap:wrap;margin-top:8px}
-.statrow.full{flex-wrap:nowrap;white-space:nowrap;overflow:hidden;margin:0 0 10px}
+.statrow.full{display:flex;flex-wrap:wrap;gap:8px 24px;align-items:baseline;margin:0 0 10px}
+.statrow.full > div{flex:1 1 300px;min-width:0}
+.statrow.full > .stat{flex-grow:1.3}
+.statrow.full .stat{display:flex;align-items:baseline;gap:4px 16px;flex-wrap:wrap}
+.statrow.full .status,.statrow.full .pct{white-space:nowrap}
+.statrow.full .status{font-size:var(--h4)} .statrow.full .pct{font-size:var(--fs-md)}
+.runbody > div:first-child{flex-grow:1.3}
+.statrow.full .mt{margin:0;font-size:var(--h4)}
+.meter.notitle .mtitle{display:none}
 .fixcard .statrow{margin:0 0 10px}
-@media (max-width:560px){.statrow.full{flex-wrap:wrap;white-space:normal}}
+@media (max-width:720px){.statrow.full .mt{display:none}.statrow.full > div{flex-basis:100%}.meter.notitle .mtitle{display:flex}}
 .statrow .status,.statrow .pct{margin:0}
 
 .card.flock-panel{padding-top:10px}
@@ -315,7 +324,11 @@ legend.qrow .chip{align-self:center}
 .meter .pin.est{background:var(--purple)}
 .meter .basepin{position:absolute;top:50%;width:0;height:30px;border-left:2px dashed var(--mid-gray);transform:translate(-50%,-50%);transition:left .6s}
 .meter .ticks{display:flex;justify-content:space-between;font-size:var(--fs-xs);color:var(--muted);margin:0 10px}
+.meter{container-type:inline-size}
 .meter .readout{display:flex;gap:4px 20px;flex-wrap:wrap;margin:2px 0 0;font-size:var(--fs-md)}
+/* The readout steps down the type scale as the meter's own width shrinks, so True value, Estimate and Gap stay on one line. */
+@container (max-width:520px){.meter .readout{font-size:var(--fs-sm);gap:4px 12px}.readout .tip > button{width:18px;height:18px}.readout .tip > button svg{width:16px;height:16px}}
+@container (max-width:420px){.meter .readout{font-size:var(--fs-xs);gap:4px 10px}}
 .meter .readout b{font-weight:600}
 .meter .readout .gapval{color:var(--amber-text)}
 
@@ -371,27 +384,39 @@ legend.qrow .chip{align-self:center}
 .tk .raven{float:right;width:110px;height:98px;margin:-10px -6px 8px 16px;overflow:visible}
 .tk .body p+p{margin-top:12px}
 
-/* Ranking (fix page) */
+/* Ranking (fix page): one row per remedy, top is rank 1. Drag a row to a new position, or select a row and then the position it should take, as in the monolith's ranking boards (vtr-sap-02). With a row in hand, the other rows are the places it can go: dashed purple, the fill tracking the pointer. */
 .rank{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
-.rrow{display:flex;align-items:center;gap:12px;border:2px solid var(--option-border);border-radius:9px;padding:8px 10px 8px 14px;background:#fff}
-.rrow .rnum{width:64px;height:40px;border:2px solid var(--option-border);border-radius:8px;font:inherit;font-weight:700;font-size:var(--h4);text-align:center;color:var(--purple);background:#fff;flex:none;cursor:pointer;padding:0 4px}
-.rrow .rnum:focus-visible{outline:3px solid var(--purple);outline-offset:2px}
-.rrow .rnum:disabled{color:var(--muted);background:var(--panel)}
-.rrow.ok .rnum:disabled{color:var(--green-text);border-color:var(--green)}
+.rrow{display:flex;align-items:center;gap:10px;border:2px solid var(--option-border);border-radius:9px;padding:8px 12px;background:#fff;cursor:grab;user-select:none;-webkit-user-select:none;transition:border-color .15s,background .15s,transform .15s,box-shadow .15s}
+.rrow:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.15)}
+.rrow:active{cursor:grabbing}
+.rrow:focus-visible{outline:3px solid var(--purple);outline-offset:2px}
+.rrow .badge{width:28px;height:28px;border-radius:50%;flex:none;display:inline-flex;align-items:center;justify-content:center;background:var(--panel);border:1px solid var(--option-border);font-size:var(--fs-sm);font-weight:600}
+.rrow > svg{width:20px;height:20px;color:var(--muted);flex:none}
 .rrow .rl{flex:1;min-width:0}
-.rrow .rl small{display:block;color:var(--muted);font-size:var(--fs-sm)}
-.rrow .ctl{display:flex;gap:4px;flex:none}
-.rrow .ctl button{all:unset;cursor:pointer;width:36px;height:36px;border-radius:8px;border:1px solid var(--option-border);display:inline-flex;align-items:center;justify-content:center;color:var(--text)}
-.rrow .ctl button:hover{background:var(--purple-hover)}
-.rrow .ctl button:disabled{opacity:.3;cursor:default}
-.rrow .ctl button:focus-visible{outline:3px solid var(--purple);outline-offset:2px}
-.rrow .ctl button svg{width:20px;height:20px}
+.rrow .rl b{display:block;font-weight:600;font-size:var(--fs-sm)}
+.rrow .rl small{display:block;color:var(--muted);font-size:var(--fs-xs)}
 .rrow .mark{width:24px;height:24px;flex:none}
-.rrow.ok{border-color:var(--green);background:var(--green-tint)} .rrow.ok .mark{color:var(--green)}
+.rrow.picked{border-color:var(--purple);background:var(--purple-tint);cursor:default}
+.rrow.picked:hover{transform:none;box-shadow:none}
+.rrow.elig{border-style:dashed;border-color:var(--purple);cursor:pointer}
+.rrow.elig:hover,.rrow.over{background:var(--purple-hover)}
+.rrow.elig:hover{transform:none;box-shadow:none}
+.rrow.dragging{opacity:.35}
+.rrow.locked{cursor:default} .rrow.locked:hover{transform:none;box-shadow:none}
+.rrow.ok{border-color:var(--green);background:var(--green-tint)} .rrow.ok .mark{color:var(--green)} .rrow.ok .badge{border-color:var(--green);background:#fff}
 .rrow.bad{border-color:var(--red);background:var(--red-tint)} .rrow.bad .mark{color:var(--red)}
 .rank-card h3{margin-bottom:4px}
 .rank-card > .sub{font-size:var(--fs-sm);color:var(--muted);margin-bottom:12px}
 .rank-card .actions{margin-top:12px;align-items:center}
+/* The bar that covers the footer while a card is in hand: what was picked, and how to put it down. */
+.pickbar{position:fixed;left:0;right:0;bottom:0;z-index:25;height:calc(var(--footer-h) + env(safe-area-inset-bottom,0px));padding-bottom:env(safe-area-inset-bottom,0px);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));background:var(--purple);color:#fff;display:flex;align-items:center;gap:12px;box-shadow:0 -2px 10px rgba(0,0,0,.2);animation:rise .22s ease-out}
+.pickbar p{flex:1;min-width:0;margin:0;font-size:var(--fs-md)}
+.pickbar p b{font-weight:600}
+.pickbar .btn{border-color:#fff;color:#fff;background:transparent;padding:6px 14px;min-height:36px}
+.pickbar .btn:hover{background:rgba(255,255,255,.15)}
+.pickbar .btn svg{width:18px;height:18px}
+@keyframes rise{from{transform:translateY(100%)}to{transform:none}}
+@media (max-width:560px){.pickbar p{font-size:var(--fs-sm)}}
 
 /* Hint (orange is reserved for hints): centered pill, swapped for a pale orange card with an orange left rule */
 :root{--hint:#FFA800;--hint-fill:#fff3e0;--hint-fill-strong:#FFD480}
@@ -514,6 +539,7 @@ legend.qrow .chip{align-self:center}
 <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 11v6M12 7.5v.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
 <symbol id="i-up" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
 <symbol id="i-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="i-drag" viewBox="0 0 24 24"><path d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" fill="currentColor"/></symbol>
 <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9 21h6M10 18h4M12 3a6 6 0 0 0-3.6 10.8c.6.5 1 1.2 1.1 2V17h5v-1.2c.1-.8.5-1.5 1.1-2A6 6 0 0 0 12 3z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
 <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
 <symbol id="i-redo" viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.3-5.6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M20 4v5h-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
@@ -627,10 +653,10 @@ const UNUSED_EVIDENCE = `<p>The size of each remedy's effect in this prototype i
 const PREDICT1 = {
   question: 'Of the people invited, who will sign up?',
   options: [
-    { id:'a', text:'A mix much like the invitation list', sub:'Everyone got the same letter, so the cohort should look like the invitees.', why:'Everyone got the same letter, but answering it is a choice, and that choice is tied to being well enough, and free enough, to come in for a visit.' },
-    { id:'b', text:'Mostly the healthier invitees', sub:'People who feel well and have the time are the ones who turn up for a research visit.', correct:true },
-    { id:'c', text:'Mostly the least healthy invitees', sub:'They have the most to gain from a health study.', why:'Having the most to gain is not the same as having the time and energy to travel to an assessment center. People in poorer health turned out less, not more.' },
-    { id:'d', text:'Almost nobody', sub:'Unpaid research visits do not attract anyone.', why:'Only 5.5% came, but 5.5% of 9.2 million is half a million people. The question is who those people were.' },
+    { id:'a', text:'A mix much like the invitation list', why:'Everyone got the same letter, but answering it is a choice, and that choice is tied to being well enough, and free enough, to come in for a visit.' },
+    { id:'b', text:'Mostly the healthier invitees', correct:true },
+    { id:'c', text:'Mostly the least healthy invitees', why:'Having the most to gain is not the same as having the time and energy to travel to an assessment center. People in poorer health turned out less, not more.' },
+    { id:'d', text:'Almost nobody', why:'Only 5.5% came, but 5.5% of 9.2 million is half a million people. The question is who those people were.' },
   ],
   feedback: 'Only 5.5% of invitees joined, and they were healthier, older, more often female, and from less deprived areas than the people who did not. Taking part asks for a free afternoon, transport to a center, and an interest in health research, and all of those travel with being well.',
   wrong: 'Think about what taking part costs: a free afternoon, a trip to an assessment center, and an interest in health research. Who finds that easiest?',
@@ -638,10 +664,10 @@ const PREDICT1 = {
 const PREDICT2 = {
   question: 'By week 6, who is still completing the check-ins?',
   options: [
-    { id:'a', text:'A mix much like week 1', sub:'Everyone enrolled is prompted every week, so the answers keep coming from everyone.', why:'The prompts go out evenly. The replies do not come back evenly, because only the people with a reason to answer keep answering.' },
-    { id:'b', text:'Mostly the people with the most symptoms', sub:'Everyone else quietly stops opening the app.', correct:true },
-    { id:'c', text:'Mostly the people with the fewest symptoms', sub:'They have the energy to keep up with it.', why:'Energy is not the issue, motivation is. People with nothing to report are the first to stop opening the app.' },
-    { id:'d', text:'Almost nobody', sub:'Remote studies lose everyone within days.', why:'Median retention was 5.5 days, yet some people stayed for the whole study. The question is who stayed.' },
+    { id:'a', text:'A mix much like week 1', why:'The prompts go out evenly. The replies do not come back evenly, because only the people with a reason to answer keep answering.' },
+    { id:'b', text:'Mostly the people with the most symptoms', correct:true },
+    { id:'c', text:'Mostly the people with the fewest symptoms', why:'Energy is not the issue, motivation is. People with nothing to report are the first to stop opening the app.' },
+    { id:'d', text:'Almost nobody', why:'Median retention was 5.5 days, yet some people stayed for the whole study. The question is who stayed.' },
   ],
   feedback: 'Across 100,000 participants, people who had the condition being studied kept responding about a week longer than those who did not, and median retention was only 5.5 days. Answering costs time and attention, and people with symptoms have a reason to keep reporting them.',
   wrong: 'Think about who has a reason to keep opening the app week after week, and who has nothing much to report.',
@@ -686,7 +712,7 @@ function checksHTML(name, opts, picks, right, wrong, done){
     let cls = 'opt' + (isR ? ' readonly correct' : isW ? ' knocked' : sel ? ' selected' : '') + (done && !isR && !isW ? ' readonly' : '');
     const mark = isR ? `<svg class="mark" aria-hidden="true"><use href="#i-check"/></svg><span class="vh">correct</span>` : isW ? `<svg class="mark" aria-hidden="true"><use href="#i-x"/></svg><span class="vh">incorrect</span>` : '';
     const ex = (isR || isW) ? o.why : '';
-    return `<label class="${cls}"><input type="checkbox" name="${name}" value="${o.id}" id="${name}-${o.id}" ${(sel||isR)?'checked':''} ${(isR||isW||done)?'disabled':''} ${ex?`aria-describedby="${name}-${o.id}-x"`:''}><span class="label">${o.text}${o.sub?`<small>${o.sub}</small>`:''}</span>${mark}${ex?`<span class="expl" id="${name}-${o.id}-x">${ex}</span>`:''}</label>`;
+    return `<label class="${cls}"><input type="checkbox" name="${name}" value="${o.id}" id="${name}-${o.id}" ${(sel||isR)?'checked':''} ${(isR||isW||done)?'disabled':''} ${ex?`aria-describedby="${name}-${o.id}-x"`:''}><span class="label">${o.text}</span>${mark}${ex?`<span class="expl" id="${name}-${o.id}-x">${ex}</span>`:''}</label>`;
   }).join('');
 }
 // Remedies. `best` marks the one that closes most of the gap; the gate waits for it.
@@ -719,17 +745,17 @@ const SCEN2 = [
 const IMPACT = [
   { key:'q1', study:'UK Biobank', question:'A team uses the UK Biobank cohort to estimate how common smoking, obesity and chronic illness are among UK adults aged 40 to 69. What happens to those estimates?',
     options: [
-      { id:'a', text:'They run too low', sub:'The healthier people who volunteered stand in for a population that is less healthy than they are.', correct:true },
-      { id:'b', text:'They run too high', sub:'Health-conscious people report more conditions because they get screened more.', why:'Screening might add a diagnosis here and there, but participants were measurably healthier on nearly everything, with death rates about half the national rate.' },
-      { id:'c', text:'They are about right', sub:'Half a million people is enough to wash out who chose to join.', why:'Size does not fix selection. Half a million volunteers are still volunteers, and they lean the same way the first thousand did.' },
+      { id:'a', text:'They run too low', correct:true },
+      { id:'b', text:'They run too high', why:'Screening might add a diagnosis here and there, but participants were measurably healthier on nearly everything, with death rates about half the national rate.' },
+      { id:'c', text:'They are about right', why:'Size does not fix selection. Half a million volunteers are still volunteers, and they lean the same way the first thousand did.' },
     ],
     wrong: 'Think about which direction the cohort leans compared with the people invited, and whether more of the same volunteers would change that.',
     feedback: 'Fry and colleagues found exactly this: participants were less likely to be obese or to smoke, reported fewer conditions, and died at about half the national rate. Any prevalence read straight off the cohort understates the population, and sample size does nothing about it. Comparisons between groups inside the cohort can still be informative, but only if the thing that drove people to volunteer is not tied to both the exposure and the outcome being compared.' },
   { key:'q2', study:'Smartphone study', question:'The smartphone study reports that average symptom severity rose over the six weeks. What is the most defensible reading?',
     options: [
-      { id:'a', text:'Symptoms got worse over time', sub:'The weekly averages went up, so the condition progressed.', why:'The averages rose, but each week\'s average comes from a different, smaller group. Nobody had to get worse for the number to climb.' },
-      { id:'b', text:'The people answering changed, so the trend cannot be separated from who dropped out', sub:'Each week\'s average comes from a smaller, more symptomatic group.', correct:true },
-      { id:'c', text:'The app is accurate because the study is large', sub:'100,000 participants makes the trend reliable.', why:'Size says nothing about who kept answering. A large study that loses its least symptomatic participants is a large biased study.' },
+      { id:'a', text:'Symptoms got worse over time', why:'The averages rose, but each week\'s average comes from a different, smaller group. Nobody had to get worse for the number to climb.' },
+      { id:'b', text:'The people answering changed, so the trend cannot be separated from who dropped out', correct:true },
+      { id:'c', text:'The app is accurate because the study is large', why:'Size says nothing about who kept answering. A large study that loses its least symptomatic participants is a large biased study.' },
     ],
     wrong: 'Ask who the week 6 average is computed from, and whether that is the same group as week 1.',
     feedback: 'The study started with the right people and lost the healthiest ones first, so the rising average is a change in who answers, not evidence that anyone got worse. A trend built on a shrinking, self-selected sample cannot support an inference about the population it started with. Pratap and colleagues saw this pattern across eight studies: people with the condition stayed, controls left, and most studies could not keep a representative sample.' },
@@ -770,8 +796,8 @@ const wireLegend = () => { const d = $('#legend'); if (d) d.addEventListener('to
 /* The meter. The truth and estimate pins are buttons: hovering or focusing one outlines the ravens it counts. */
 /* A small (i) with a tooltip. `side` is 'r' when the bubble should open leftward (anchored to its right edge). */
 const tipHTML = (id, label, text, side='l') => `<span class="tip ${side}"><button type="button" aria-describedby="${id}" aria-label="${label}">${icon('i-info')}</button><span class="bubble" role="tooltip" id="${id}">${text}</span></span>`;
-function meterHTML(cfg){
-  return `<div class="meter" id="meter"><div class="mtitle"><h4>${cfg.title}</h4></div>
+function meterHTML(cfg, notitle=false){
+  return `<div class="meter ${notitle?'notitle':''}" id="meter"><div class="mtitle"><h4>${cfg.title}</h4></div>
     <div class="readout"><span>${tipHTML('tip-truth', 'What the true value is', cfg.tipTruth)}True value <b>${cfg.fmt(cfg.truth)}</b></span><span id="m-est-read">${tipHTML('tip-est', 'What the estimate is', cfg.tipEst)}Estimate <b>not yet run</b></span><span id="m-gap-read"></span></div>
     <div class="track"><div class="gap" id="m-gap"></div>
       <div class="pin truth" id="m-truth"></div><div class="tag truth" id="m-truth-tag">True value: ${cfg.fmt(cfg.truth)}</div>
@@ -783,13 +809,15 @@ function meterHTML(cfg){
 function fitTips(root=document){
   $$('.tip', root).forEach(t => { const show = () => { const b = $('.bubble', t); t.classList.remove('r'); const r = b.getBoundingClientRect(); if (r.right > window.innerWidth - 8) t.classList.add('r'); }; t.addEventListener('mouseenter', show); t.addEventListener('focusin', show); });
 }
+/* Keeps a floating tag inside the track: its centre is pushed in by half its own width at either end. */
+function keepIn(tag, pctVal){ const track = tag.parentElement; const tw = tag.offsetWidth, w = track ? track.offsetWidth : 0; if (!tw || !w) { tag.style.left = pctVal + '%'; return; } const half = tw / 2 / w * 100; tag.style.left = Math.max(half, Math.min(100 - half, pctVal)) + '%'; }
 function setMeter(cfg, est){
-  const pct = v => ((v - cfg.min) / (cfg.max - cfg.min)) * 100;
-  $('#m-truth').style.left = pct(cfg.truth) + '%'; $('#m-truth-tag').style.left = pct(cfg.truth) + '%';
+  const pct = v => Math.max(0, Math.min(100, ((v - cfg.min) / (cfg.max - cfg.min)) * 100));
+  $('#m-truth').style.left = pct(cfg.truth) + '%'; keepIn($('#m-truth-tag'), pct(cfg.truth));
   const e = $('#m-est'), t = $('#m-est-tag');
   if (est == null) { e.hidden = true; t.hidden = true; $('#m-gap').style.width = '0'; $('#m-gap').hidden = true; $('#m-est-read').innerHTML = `${tipHTML('tip-est', 'What the estimate is', cfg.tipEst)}Estimate <b>none, nobody answered</b>`; $('#m-gap-read').innerHTML = ''; fitTips($('#meter')); return; }
   e.hidden = false; t.hidden = false;
-  e.style.left = pct(est) + '%'; t.style.left = pct(est) + '%'; t.textContent = cfg.estLabel + ': ' + cfg.fmt(est);
+  e.style.left = pct(est) + '%'; t.textContent = cfg.estLabel + ': ' + cfg.fmt(est); keepIn(t, pct(est));
   const g = $('#m-gap'); g.hidden = false; const lo = Math.min(pct(est), pct(cfg.truth)), hi = Math.max(pct(est), pct(cfg.truth));
   g.style.left = lo + '%'; g.style.width = (hi - lo) + '%';
   $('#m-est-read').innerHTML = `${tipHTML('tip-est', 'What the estimate is', cfg.tipEst)}Estimate <b>${cfg.fmt(est)}</b>`;
@@ -797,7 +825,7 @@ function setMeter(cfg, est){
   fitTips($('#meter'));
 }
 /* Faint dashed marker for the no-remedy estimate, so a remedy's movement has a reference point. */
-function setBasePin(cfg, est){ const pct = v => ((v - cfg.min) / (cfg.max - cfg.min)) * 100; const b = $('#m-base'), t = $('#m-base-tag'); b.hidden = false; t.hidden = false; b.style.left = pct(est)+'%'; t.style.left = pct(est)+'%'; t.textContent = 'No remedy: ' + cfg.fmt(est); }
+function setBasePin(cfg, est){ const pct = v => Math.max(0, Math.min(100, ((v - cfg.min) / (cfg.max - cfg.min)) * 100)); const b = $('#m-base'), t = $('#m-base-tag'); b.hidden = false; t.hidden = false; b.style.left = pct(est)+'%'; t.textContent = 'No remedy: ' + cfg.fmt(est); keepIn(t, pct(est)); }
 const METER1 = { title:'Share in poorer health', min:0, max:.5, truth:R1_TRUTH, ticks:['0%','10%','20%','30%','40%','50%'], estLabel:'Cohort\'s estimate', fmt:v=>Math.round(v*100)+'%', fmtGap:v=>(v>=0?'+':'')+Math.round(v*100)+' points',
   how:'The 40 ravens are a hypothetical population built to show the pattern UK Biobank found, not its actual figures. Each face is a true health score the study cannot see until that person takes part.',
   tipTruth:'The share of all 40 invited ravens whose face is 4 or 5: 9 of 40, or 23%. A study could only know this if every invitee took part.',
@@ -822,7 +850,7 @@ function optionsHTML(name, opts, chosen, done, graded, knocked=[], expl=null, ma
     if (done && graded && sel && !ko) mark = `<svg class="mark" aria-hidden="true"><use href="#${o.correct?'i-check':'i-x'}"/></svg><span class="vh">${o.correct?'correct answer':'incorrect'}</span>`;
     else if (!mark && markOf) mark = markOf(o) || '';
     const ex = expl ? (expl(o, { sel, ko }) || '') : '';
-    return `<label class="${cls}"><input type="radio" name="${name}" value="${o.id}" id="${name}-${o.id}" ${sel?'checked':''} ${(done||ko)?'disabled':''} ${ex?`aria-describedby="${name}-${o.id}-x"`:''}><span class="label">${o.text}${o.sub?`<small>${o.sub}</small>`:''}</span>${mark}${ex?`<span class="expl" id="${name}-${o.id}-x">${ex}</span>`:''}</label>`;
+    return `<label class="${cls}"><input type="radio" name="${name}" value="${o.id}" id="${name}-${o.id}" ${sel?'checked':''} ${(done||ko)?'disabled':''} ${ex?`aria-describedby="${name}-${o.id}-x"`:''}><span class="label">${o.text}</span>${mark}${ex?`<span class="expl" id="${name}-${o.id}-x">${ex}</span>`:''}</label>`;
   }).join('');
 }
 
@@ -831,11 +859,11 @@ function simPanelsHTML(round, runLabel, leftTop='', { meterHidden=false } = {}){
   const cfg = round===1 ? METER1 : METER2;
   const SCEN = round===1 ? SCEN1 : SCEN2;
   const sampleCard = `<section class="card flock-panel sample-panel" id="run-card">
-      <div class="rungrp"><p class="lead">${round===1?'40 invitations are ready to go out.':'40 people are enrolled and the first check-in is ready to send.'}</p>${runLabel?`<button type="button" class="btn primary" id="run-btn">${icon('i-play')} ${runLabel}</button>`:''}<p class="sub" id="sample-sub"></p></div><div class="statrow full" id="statrow" ${meterHidden?'hidden':''}><div class="status" id="stage-now"></div><div class="pct" id="sample-pct"></div></div><div class="runbody"><div>
+      <div class="rungrp"><p class="lead">${round===1?'40 invitations are ready to go out.':'40 people are enrolled and the first check-in is ready to send.'}</p>${runLabel?`<button type="button" class="btn primary" id="run-btn">${icon('i-play')} ${runLabel}</button>`:''}<p class="sub" id="sample-sub"></p></div><div class="statrow full" id="statrow" ${meterHidden?'hidden':''}><div class="stat"><div class="status" id="stage-now"></div><div class="pct" id="sample-pct"></div></div><div><h4 class="mt">${cfg.title}</h4></div></div><div class="runbody"><div>
       <div id="run-out" ${meterHidden?'hidden':''}>${round===2?`<div class="weeks" id="weeks"><div class="now" id="week-now">&nbsp;</div><span class="hint">After the run, select a week to look at it again.</span><div class="wks" role="group" aria-label="Weeks" id="wks">${Array.from({length:6},(_,i)=>`<button type="button" class="wk" id="wk-${i+1}" data-w="${i+1}" disabled>Week ${i+1}</button>`).join('')}</div></div>`:''}
       <div class="flock sample" id="sample"></div></div>
       </div>
-      <div id="meter-wrap" class="${meterHidden?'ghost':''}">${meterHTML(cfg)}</div></div>
+      <div id="meter-wrap" class="${meterHidden?'ghost':''}">${meterHTML(cfg, true)}</div></div>
       <div class="whatif" id="whatif" hidden><h4>What if a different group had ${round===1?'signed up':'kept answering'}? <span class="sub">Switch through each possibility to see where the estimate would land. <b id="seen-count"></b></span></h4>
         <div class="pills" role="group" aria-label="Possibilities" id="scen-pills"></div><div id="scen-note"></div></div>
       <details class="legend src" id="src" ${meterHidden?'hidden':''}><summary>Where these numbers come from</summary><div class="key"><p>${round===1
@@ -862,8 +890,8 @@ function drawTried(round, R, REM){
 function applyToPanel(round, which, { markNew=false } = {}){
   const cfg = round===1 ? METER1 : METER2;
   let ids, est, status, pct, sub, n = 40, share;
-  if (round===1) { const r = simR1(which); ids = r.enrolled; est = ids.length ? r.share : null; status = `${ids.length} of 40 signed up`; pct = `${Math.round(ids.length/40*100)}% of the people invited`; sub = `${40-ids.length} never replied`; }
-  else { const r = simR2(which); ids = r.final.ids; est = ids.length ? r.final.mean : null; n = r.invited ? 20 : 40; status = `${ids.length} of ${n} still answering in week 6`; pct = `${Math.round(ids.length/n*100)}% of the people ${r.invited?'prompted':'enrolled'}`; sub = `${n-ids.length} ${r.invited?'prompted ':''}people had stopped`; }
+  if (round===1) { const r = simR1(which); ids = r.enrolled; est = ids.length ? r.share : null; status = `${ids.length} of 40 signed up`; pct = `${Math.round(ids.length/40*100)}% of those invited`; sub = `${40-ids.length} never replied`; }
+  else { const r = simR2(which); ids = r.final.ids; est = ids.length ? r.final.mean : null; n = r.invited ? 20 : 40; status = `${ids.length} of ${n} still answering in week 6`; pct = `${Math.round(ids.length/n*100)}% of those ${r.invited?'prompted':'enrolled'}`; sub = `${n-ids.length} ${r.invited?'prompted ':''}people had stopped`; }
   share = Math.round(ids.length/n*100);
   const baseIds = new Set(markNew ? (round===1 ? simR1('base').enrolled : simR2('base').final.ids) : []);
   let added = 0;
@@ -871,7 +899,7 @@ function applyToPanel(round, which, { markNew=false } = {}){
   $$('#pop .head').forEach((h,i) => { if (!reduced) h.style.transitionDelay = (i*20)+'ms'; const inS = ids.includes(h.dataset.id); const isNew = markNew && inS && !baseIds.has(h.dataset.id); if (isNew) added++; h.classList.toggle('out', !inS); h.classList.toggle('in-s', inS); h.classList.toggle('new', isNew); });
   if (markNew && added) sub += `, ${added} ${added===1?'person':'people'} brought in by this remedy.`;
   const bar = $('#share-bar');
-  if (bar) { bar.style.width = share + '%'; $('#sample-pct').textContent = share + '%'; $('#stage-now').textContent = status; $('#share-lbl').textContent = `${status}, ${share}% of the people ${round===1?'invited':'enrolled'}`; }
+  if (bar) { bar.style.width = share + '%'; $('#sample-pct').textContent = share + '%'; $('#stage-now').textContent = status; $('#share-lbl').textContent = `${status}, ${share}% of those ${round===1?'invited':'enrolled'}`; }
   else { $('#stage-now').textContent = status; $('#sample-pct').textContent = pct; }
   $('#sample-sub').textContent = sub;
   setMeter(cfg, est);
@@ -889,15 +917,19 @@ function runSim(round, remedy, { instant=false, onDone } = {}){
   const sample = $('#sample'), btn = $('#run-btn');
   if (btn) btn.setAttribute('aria-disabled','true');
   const stagger = quick ? 0 : 30;
-  const showSample = (ids) => {
-    sample.innerHTML = ids.length ? ids.map((id,i) => head(gOf(id).face, quick?'':'in-sample', gOf(id).label).replace('<svg', `<svg style="animation-delay:${i*stagger}ms"`)).join('') : '<p class="empty">Nobody</p>';
-    $$('#pop .head').forEach((h,i) => { const inS = ids.includes(h.dataset.id); if (!quick) h.style.transitionDelay = (i*12)+'ms'; h.classList.toggle('out', !inS); });
+  const showSample = (ids, still=false) => {
+    const pop = still || quick;
+    sample.innerHTML = ids.length ? ids.map((id,i) => head(gOf(id).face, pop?'':'in-sample', gOf(id).label).replace('<svg', `<svg style="animation-delay:${pop?0:i*stagger}ms"`)).join('') : '<p class="empty">Nobody</p>';
+    $$('#pop .head').forEach((h,i) => { const inS = ids.includes(h.dataset.id); h.style.transitionDelay = pop ? '' : (i*12)+'ms'; h.classList.toggle('out', !inS); });
   };
+  /* Looking back at a week after the run: everything snaps into place with no animation. */
+  const stillParts = () => [$('#run-card'), $('#pop')].filter(Boolean);
+  const snap = (fn) => { const els = stillParts(); els.forEach(el => el.classList.add('still')); fn(); void document.body.offsetWidth; els.forEach(el => el.classList.remove('still')); };
   const finish = () => { if (btn) { btn.setAttribute('aria-disabled','false'); btn.innerHTML = `${icon('i-redo')} Run again`; } if (onDone) onDone(); };
   if (round === 1) {
     const res = simR1(remedy);
     const s0 = () => { if (token!==runToken) return; $('#stage-now').textContent = 'Invitations in the mail'; $('#sample-pct').textContent = ''; $$('#pop .head').forEach(h=>h.classList.remove('out')); sample.innerHTML = '<p class="empty">Waiting for replies</p>'; $('#sample-sub').textContent = 'All 40 invited'; };
-    const s1 = () => { if (token!==runToken) return; $('#stage-now').textContent = `${res.enrolled.length} of 40 signed up`; $('#sample-pct').textContent = `${Math.round(res.enrolled.length/40*100)}% of the people invited`; showSample(res.enrolled); $('#sample-sub').textContent = `${40-res.enrolled.length} never replied`; setMeter(cfg, res.share); live(`${res.enrolled.length} of 40 signed up, ${Math.round(res.enrolled.length/40*100)} percent. Estimate ${cfg.fmt(res.share)}, true value ${cfg.fmt(cfg.truth)}.`); finish(); };
+    const s1 = () => { if (token!==runToken) return; $('#stage-now').textContent = `${res.enrolled.length} of 40 signed up`; $('#sample-pct').textContent = `${Math.round(res.enrolled.length/40*100)}% of those invited`; showSample(res.enrolled); $('#sample-sub').textContent = `${40-res.enrolled.length} never replied`; setMeter(cfg, res.share); live(`${res.enrolled.length} of 40 signed up, ${Math.round(res.enrolled.length/40*100)} percent. Estimate ${cfg.fmt(res.share)}, true value ${cfg.fmt(cfg.truth)}.`); finish(); };
     if (quick) { s0(); s1(); } else { s0(); setTimeout(s1, 500); }
     return res;
   } else {
@@ -905,15 +937,19 @@ function runSim(round, remedy, { instant=false, onDone } = {}){
     const step = (w, auto=true) => {
       if (token!==runToken) return;
       const wk = res.weeks[w-1];
-      showSample(wk.ids);
-      if (res.invited) $$('#pop .head').forEach(h => { if (!res.invited.has(h.dataset.id)) h.classList.add('out'); });
-      for (let k=1;k<=6;k++){ const li=$('#wk-'+k); li.classList.toggle('done', k<w); li.classList.toggle('now-wk', k===w); }
-      $('#week-now').textContent = `Week ${w} of 6`;
-      $('#stage-now').textContent = `${wk.ids.length} of ${res.invited?20:40} answered in week ${w}`; $('#sample-pct').textContent = `${Math.round(wk.ids.length/(res.invited?20:40)*100)}% of the people ${res.invited?'prompted':'enrolled'}`;
-      $('#sample-sub').textContent = `${(res.invited?20:40)-wk.ids.length} ${res.invited?'prompted ':''}people did not answer this week`;
-      setMeter(cfg, wk.mean);
-      if (!auto) { live(`Week ${w}: ${wk.ids.length} answered. Estimate ${cfg.fmt(wk.mean)}.`); return; }
-      if (w<6) setTimeout(()=>step(w+1), WEEK_MS); else { live(`Week 6: ${wk.ids.length} answered. Estimate ${cfg.fmt(wk.mean)}, true value ${cfg.fmt(cfg.truth)}.`); $$('#wks .wk').forEach(b => { b.disabled = false; }); finish(); }
+      const show = () => {
+        showSample(wk.ids, !auto);
+        if (res.invited) $$('#pop .head').forEach(h => { if (!res.invited.has(h.dataset.id)) h.classList.add('out'); });
+        // During the run the weeks fill in as they pass; after it, every week stays light purple and the one being looked at is dark.
+        for (let k=1;k<=6;k++){ const li=$('#wk-'+k); li.classList.toggle('done', auto ? k<w : true); li.classList.toggle('now-wk', k===w); }
+        $('#week-now').textContent = `Week ${w} of 6`;
+        $('#stage-now').textContent = `${wk.ids.length} of ${res.invited?20:40} answered in week ${w}`; $('#sample-pct').textContent = `${Math.round(wk.ids.length/(res.invited?20:40)*100)}% of those ${res.invited?'prompted':'enrolled'}`;
+        $('#sample-sub').textContent = `${(res.invited?20:40)-wk.ids.length} ${res.invited?'prompted ':''}people did not answer this week`;
+        setMeter(cfg, wk.ids.length ? wk.mean : null);
+      };
+      if (auto) show(); else snap(show);
+      if (!auto) { live(`Week ${w}: ${wk.ids.length} answered. ${wk.ids.length ? 'Estimate '+cfg.fmt(wk.mean) : 'No estimate'}.`); return; }
+      if (w<6) setTimeout(()=>step(w+1), WEEK_MS); else { live(`Week 6: ${wk.ids.length} answered. ${wk.ids.length ? 'Estimate '+cfg.fmt(wk.mean)+', ' : 'No estimate, '}true value ${cfg.fmt(cfg.truth)}.`); $$('#wks .wk').forEach(b => { b.disabled = false; }); finish(); }
     };
     $$('#wks .wk').forEach(b => { b.disabled = true; });
     showWeek = (w) => step(w, false);
@@ -1093,15 +1129,17 @@ function renderFix(round, bar){
     <section class="card icard"><h2>Fix it and rerun</h2><p>Choose a recruitment remedy. The ${round===1?'study':'six weeks'} reruns with it and the meter moves. Keep trying until you find the remedy that closes most of the gap, then rank all five for this study.</p><p class="claim"><b>Claim under test:</b> ${round===1?CLAIM1:CLAIM2}</p></section>
     <details class="study"><summary>Study details</summary><div class="body">${round===1?STUDY1:STUDY2}</div></details>
     <section class="card flock-panel fixcard"><div class="pills" role="group" aria-label="Remedy" id="pills"></div><div class="vband" id="vband" hidden></div>
-      <div class="statrow full"><div class="status" id="stage-now">&nbsp;</div><div class="pct" id="sample-pct"></div></div><p class="sub vh" id="sample-sub"></p>
+      <div class="statrow full"><div class="stat"><div class="status" id="stage-now">&nbsp;</div><div class="pct" id="sample-pct"></div></div><div><h4 class="mt">${cfg.title}</h4></div></div><p class="sub vh" id="sample-sub"></p>
       <div class="runbody"><div><div class="tried"><h4>Estimates so far</h4><div id="tried-rows"></div><p class="cap" id="tried-cap"><i></i>True value</p></div></div>
-      <div>${meterHTML(cfg)}</div></div>
+      <div>${meterHTML(cfg, true)}</div></div>
       <p class="evline" id="evline" hidden></p></section>
-    <section class="card rank-card" id="rank-card" hidden><div class="cardhead"><h3>Rank the remedies for this study</h3><span id="rank-chip"></span></div><p class="sub">You found the remedy that closes most of the gap. Now choose a number for each remedy, from 1 (closes most of the gap) to 5 (closes least); the estimates above are your guide.</p>
-      <ol class="rank" id="rank" aria-label="Your ranking"></ol>
+    <section class="card rank-card" id="rank-card" hidden><div class="cardhead"><h3>Rank the remedies for this study</h3><span id="rank-chip"></span></div><p class="sub">You found the remedy that closes most of the gap. Now put the remedies in order, from 1 (closes most of the gap) at the top to 5 (closes least) at the bottom: drag a row to a new position, or select a row and then the position it should take. The estimates above are your guide.</p>
+      <div id="rankwrap"><ol class="rank" id="rank" aria-label="Your ranking"></ol></div>
+      <span class="vh" id="rank-live" aria-live="polite"></span>
       <div class="hint-wrap" id="hint-wrap"><button type="button" class="hint-pill" id="hint-btn" aria-expanded="false" aria-controls="hint-card">${icon('i-bulb')} Show Hint</button></div>
-      <div class="hint-card" id="hint-card" hidden><button type="button" class="hx" id="hint-close" aria-label="Close hint">${icon('i-close')}</button><div class="hh">${icon('i-bulb')} Hint:</div><p>In Estimates so far, the closer a bar reaches the dashed true-value line, the better that remedy did. The closest bar gets 1, the furthest gets 5.</p></div>
-      <div class="actions" id="rank-actions"></div><div id="rank-fb" style="margin-top:12px"></div></section>
+      <div class="hint-card" id="hint-card" hidden><button type="button" class="hx" id="hint-close" aria-label="Close hint">${icon('i-close')}</button><div class="hh">${icon('i-bulb')} Hint:</div><p>In Estimates so far, the closer a bar reaches the dashed true-value line, the better that remedy did. The closest bar goes at the top, the furthest at the bottom.</p></div>
+      <div id="rank-fb" style="margin-top:12px"></div><div class="actions" id="rank-actions"></div>
+      <div class="pickbar" id="pickbar" hidden><p><b>Picked:</b> "<span id="pick-lbl"></span>". Choose its new position.</p><button type="button" class="btn" id="pick-cancel" aria-label="Cancel pick">${icon('i-close')} Cancel</button></div></section>
     <div id="fix-takeaway"></div>
   </div>`;
   const pills = $('#pills');
@@ -1118,30 +1156,89 @@ function renderFix(round, bar){
   apply();
   pills.addEventListener('click', e => { const b = e.target.closest('.pill'); if (!b) return; const first = R.tried.length === 0; R.remedy = b.dataset.id; apply(); $(`.pill[data-id="${R.remedy}"]`).focus({ preventScroll:true }); if (first) requestAnimationFrame(() => { const el = $('.fixcard'); if (el) el.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' }); }); });
 
-  /* Ranking: type a number 1 to 5 beside each remedy, then check. A remedy is right when its gap to the true value matches the gap at that rank in the correct order, so tied remedies may take either of their two numbers. */
+  /* Ranking: one row per remedy, top is rank 1. Drag a row to a new position, or select it and then the row whose position it should take (the keyboard and touch path); a focused row also moves one place with the arrow keys. All three run the same move. A remedy is right when its gap to the true value matches the gap at that rank in the correct order, so tied remedies may take either of their two places. Right rows lock in place after a check. */
   const K = R.rank; if (!K.ranks) K.ranks = {};
   const gap = id => Math.abs((round===1 ? simR1(id).share : simR2(id).final.mean) - cfg.truth);
   const correctGaps = REM.map(r => gap(r.id)).sort((a,b) => a-b);
   const rankOK = (id, n) => n >= 1 && n <= REM.length && Math.abs(gap(id) - correctGaps[n-1]) < 1e-9;
-  let verdicts = null;   // {id: true/false} after a check, cleared when a number changes
-  const nums = () => REM.map(r => K.ranks[r.id]).filter(v => v);
-  const complete = () => nums().length === REM.length;
-  const dupes = () => { const seen = {}; return nums().filter(v => (seen[v] = (seen[v]||0) + 1) === 2); };
-  drawRank = () => {
-    $('#rank').innerHTML = REM.map(r => { const v = verdicts ? verdicts[r.id] : null; const val = K.ranks[r.id] || '';
-      return `<li class="rrow ${v===true?'ok':v===false?'bad':''}" data-id="${r.id}"><select class="rnum" aria-label="Rank for ${r.short}, 1 is best" data-id="${r.id}" ${(K.done||v===true)?'disabled':''}><option value="">–</option>${Array.from({length:REM.length},(_,k)=>`<option value="${k+1}" ${val===k+1?'selected':''}>${k+1}</option>`).join('')}</select><span class="rl">${r.text}${R.tried.includes(r.id)?`<small>${cfg.fmt(round===1 ? simR1(r.id).share : simR2(r.id).final.mean)}</small>`:'<small>Not tried yet</small>'}</span>
-        ${v===null?'':`<svg class="mark" aria-hidden="true"><use href="#${v?'i-check':'i-x'}"/></svg><span class="vh">${v?'right':'wrong'}</span>`}</li>`; }).join('');
-    const right = verdicts ? Object.values(verdicts).filter(Boolean).length : null;
-    const dup = dupes();
-    $('#rank-chip').innerHTML = K.done ? `<span class="chip done">${icon('i-check')} Ranking complete</span>` : (verdicts ? `<span class="chip" role="status">${right} of ${REM.length} right</span>` : '');
-    $('#rank-actions').innerHTML = K.done ? '' : `<button type="button" class="btn primary" id="rank-check" aria-disabled="${complete() && !dup.length ? 'false' : 'true'}">${K.checks?'Check again':'Check ranking'}</button>`;
-    $('#rank-fb').innerHTML = K.done ? '' : dup.length ? `<div class="alert bad" role="status">${icon('i-x')}<div>Each number from 1 to ${REM.length} can be used once. ${dup.join(' and ')} ${dup.length===1?'is':'are'} used twice.</div></div>` : (verdicts ? `<div class="alert bad" role="status">${icon('i-x')}<div><b>Try again.</b> The remedies marked red have the wrong number. The right ones are locked; use the estimates above to place the rest, then check again.</div></div>` : '');
-    $('#fix-takeaway').innerHTML = K.done ? `<section class="takeaway"><h3>Good strategies, different fits</h3><p>Most of these are sound recruitment strategies, and several of them belong in the same study. Which one does the most depends on where the sample leaked and who is missing. ${round===1?'Here the leak was at sign-up, among people in poorer health, so reaching them through routes they already trust did the most. Compensation and a clearer invitation still helped; more letters did nothing.':'Here the leak was in who kept answering, and the people lost were those with little to report, so cutting the burden of each check-in did the most. Payment and reminders still helped; more participants did nothing.'} In another study, with a different leak, the order could change.</p></section>` : '';
-    const b = $('#rank-check'); if (b) b.addEventListener('click', () => { if (b.getAttribute('aria-disabled')==='true') return; verdicts = {}; REM.forEach(r => { verdicts[r.id] = rankOK(r.id, Number(K.ranks[r.id])); }); K.checks++; K.done = REM.every(r => verdicts[r.id]); drawRank(); renderFooter(); });
+  const ids = REM.map(r => r.id);
+  // The starting order is the first arrangement, in a fixed sequence, with no remedy already in its right place.
+  if (!ids.every(id => K.ranks[id])) {
+    const perms = (a) => a.length <= 1 ? [a] : a.flatMap((x, k) => perms(a.filter((_, m) => m !== k)).map(p => [x, ...p]));
+    const start = perms(ids).find(p => p.every((id, k) => !rankOK(id, k+1))) || ids;
+    start.forEach((id, k) => { K.ranks[id] = k+1; });
+  }
+  let verdicts = null;   // {id: true/false} after a check; wrong ones clear when a row moves, right ones stay locked
+  let hand = null;       // the picked row (click or keyboard path)
+  let dragId = null;     // the row being dragged
+  const byId = id => REM.find(r => r.id === id);
+  const order = () => ids.slice().sort((a,b) => K.ranks[a] - K.ranks[b]);
+  const posOf = id => K.ranks[id] - 1;
+  const locked = id => K.done || !!(verdicts && verdicts[id] === true);
+  const estOf = r => cfg.fmt(round===1 ? simR1(r.id).share : simR2(r.id).final.mean);   // every estimate shows once the ranking opens, tried or not
+  const say = (msg) => { const el = $('#rank-live'); if (el) { el.textContent = ''; setTimeout(() => { el.textContent = msg; }, 30); } };
+  /* The one move every path runs: put `id` at position `to` (0-based) and shift the others. Locked rows keep their places; a move onto a locked place lands just below it. */
+  const moveTo = (id, to) => {
+    if (!byId(id) || locked(id)) return false;
+    const ord = order(); const freePos = ord.map((_, k) => k).filter(k => !locked(ord[k]));
+    const free = ord.filter(x => x !== id && !locked(x));
+    const k = freePos.filter(pos => pos < to).length;
+    free.splice(Math.min(k, free.length), 0, id);
+    const before = ord.join();
+    freePos.forEach((pos, m) => { K.ranks[free[m]] = pos + 1; });
+    if (order().join() === before) return false;
+    if (verdicts && !K.done) { const keep = {}; ids.forEach(x => { if (verdicts[x] === true) keep[x] = true; }); verdicts = Object.keys(keep).length ? keep : null; }
+    return true;
   };
-  $('#rank').addEventListener('change', e => { const i = e.target.closest('select.rnum'); if (!i || K.done) return; const v = parseInt(i.value, 10); K.ranks[i.dataset.id] = (v >= 1 && v <= REM.length) ? v : null;
-    if (verdicts) { const keep = {}; REM.forEach(r => { if (verdicts[r.id] === true) keep[r.id] = true; }); verdicts = Object.keys(keep).length ? keep : null; }
-    const focusId = i.dataset.id; drawRank(); const ni = $(`select.rnum[data-id="${focusId}"]`); if (ni && !ni.disabled) { ni.focus({ preventScroll:true }); } });
+  const describe = id => `${byId(id).short} moved to position ${K.ranks[id]} of ${ids.length}.`;
+  drawRank = () => {
+    const list = $('#rank'); if (!list) return;
+    const handR = hand ? byId(hand) : null;
+    list.innerHTML = order().map((id, k) => { const r = byId(id); const v = verdicts ? verdicts[id] : null; const lk = locked(id), picked = hand === id, elig = !!(handR && !lk && !picked);
+      const label = elig ? `Move ${handR.short} to position ${k+1}, the place of ${r.short}` : `${r.short}, position ${k+1} of ${ids.length}${lk?', locked':''}`;
+      return `<li class="rrow ${v===true?'ok':v===false?'bad':''} ${picked?'picked':''} ${elig?'elig':''} ${lk?'locked':''} ${dragId===id?'dragging':''}" data-id="${id}" title="${r.text}" ${lk ? '' : `draggable="true" role="button" tabindex="${hand && !picked && !elig ? -1 : 0}" ${elig ? '' : `aria-pressed="${picked?'true':'false'}"`}`} aria-label="${label}"><span class="badge" aria-hidden="true">${k+1}</span>${lk?'':icon('i-drag')}<span class="rl"><b>${r.short}</b><small>${estOf(r)}</small></span>${v==null?'':`<svg class="mark" aria-hidden="true"><use href="#${v?'i-check':'i-x'}"/></svg><span class="vh">${v?'right':'wrong'}</span>`}</li>`; }).join('');
+    const right = verdicts ? Object.values(verdicts).filter(Boolean).length : null;
+    $('#rank-chip').innerHTML = K.done ? `<span class="chip done">${icon('i-check')} Ranking complete</span>` : (verdicts ? `<span class="chip" role="status">${right} of ${ids.length} right</span>` : '');
+    $('#rank-actions').innerHTML = K.done ? '' : `<button type="button" class="btn primary" id="rank-check" aria-disabled="false">${K.checks?'Check again':'Check ranking'}</button>`;
+    $('#rank-fb').innerHTML = K.done ? '' : (verdicts ? `<div class="alert bad" role="status">${icon('i-x')}<div><b>Try again.</b> The remedies marked red are in the wrong position. The right ones are locked in place; use the estimates above to move the rest, then check again.</div></div>` : '');
+    $('#fix-takeaway').innerHTML = K.done ? `<section class="takeaway"><h3>Good strategies, different fits</h3><p>Most of these are sound recruitment strategies, and several of them belong in the same study. Which one does the most depends on where the sample leaked and who is missing. ${round===1?'Here the leak was at sign-up, among people in poorer health, so reaching them through routes they already trust did the most. Compensation and a clearer invitation still helped; more letters did nothing.':'Here the leak was in who kept answering, and the people lost were those with little to report, so cutting the burden of each check-in did the most. Payment and reminders still helped; more participants did nothing.'} In another study, with a different leak, the order could change.</p></section>` : '';
+    const pb = $('#pickbar'); pb.hidden = !handR; if (handR) $('#pick-lbl').textContent = handR.short;
+    if (handR) footerWrap.setAttribute('inert', ''); else footerWrap.removeAttribute('inert');
+    const b = $('#rank-check'); if (b) b.addEventListener('click', () => { verdicts = {}; ids.forEach(id => { verdicts[id] = rankOK(id, K.ranks[id]); }); K.checks++; K.done = ids.every(id => verdicts[id]); hand = null; drawRank(); renderFooter(); });
+  };
+  const focusRow = (id) => { const el = $(`.rrow[data-id="${id}"]`); if (el && el.tabIndex === 0) el.focus({ preventScroll:true }); };
+  const pick = (id) => { hand = id; drawRank(); focusRow(id); say(`Picked ${byId(id).short}. Tab to the row whose position you want and press Enter to move it there, or press Escape to cancel.`); };
+  const cancelPick = () => { if (!hand) return; const id = hand; hand = null; drawRank(); focusRow(id); say('Pick canceled.'); };
+  const placeHand = (to) => { const id = hand; hand = null; if (moveTo(id, to)) { drawRank(); focusRow(id); say(describe(id)); } else drawRank(); };
+  const rowOf = (el) => el.closest('.rrow');
+  const rw = $('#rankwrap');
+  rw.addEventListener('click', e => {
+    const row = rowOf(e.target); if (!row) return; const id = row.dataset.id;
+    if (hand) { if (row.classList.contains('elig')) { placeHand(posOf(id)); return; } if (hand === id) { cancelPick(); return; } return; }
+    if (!locked(id)) pick(id);
+  });
+  rw.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { cancelPick(); return; }
+    const row = rowOf(e.target); if (!row) return; const id = row.dataset.id;
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault();
+      if (hand) { if (row.classList.contains('elig')) placeHand(posOf(id)); else if (hand === id) cancelPick(); }
+      else if (!locked(id)) pick(id);
+      return; }
+    if (hand || locked(id)) return;
+    const d = (e.key === 'ArrowUp' || e.key === 'ArrowLeft') ? -1 : (e.key === 'ArrowDown' || e.key === 'ArrowRight') ? 1 : 0; if (!d) return;
+    e.preventDefault(); const to = posOf(id) + d;
+    if (to < 0 || to >= ids.length || !moveTo(id, to)) { say(`${byId(id).short} is already ${d < 0 ? 'as high' : 'as low'} as it can go.`); return; }
+    drawRank(); focusRow(id); say(describe(id));
+  });
+  $('#pick-cancel').addEventListener('click', cancelPick);
+  /* The drag half. A drag supersedes a pick silently. The source fades rather than disappearing, so the browser keeps the drag alive. A drop lands before the first row whose midpoint the pointer has not passed. */
+  rw.addEventListener('dragstart', e => { const row = rowOf(e.target); if (!row || locked(row.dataset.id)) { e.preventDefault(); return; } hand = null; dragId = row.dataset.id; if (e.dataTransfer) { e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', dragId); } setTimeout(drawRank, 0); });
+  const dropIndex = (e) => { const rows = $$('#rank .rrow').filter(r => r.dataset.id !== dragId); const k = rows.findIndex(r => { const b = r.getBoundingClientRect(); return e.clientY < b.top + b.height / 2; }); return k === -1 ? rows.length : k; };
+  rw.addEventListener('dragover', e => { if (!dragId) return; e.preventDefault(); if (e.dataTransfer) e.dataTransfer.dropEffect = 'move'; const row = rowOf(e.target); $$('#rank .rrow.over').forEach(o => { if (o !== row) o.classList.remove('over'); }); if (row && row.dataset.id !== dragId && !row.classList.contains('locked')) row.classList.add('over'); });
+  rw.addEventListener('dragleave', e => { const row = rowOf(e.target); if (row && !row.contains(e.relatedTarget)) row.classList.remove('over'); });
+  const endDrag = () => { dragId = null; $$('#rank .rrow.over').forEach(o => o.classList.remove('over')); drawRank(); };
+  rw.addEventListener('drop', e => { if (!dragId) return; e.preventDefault(); const id = dragId; const to = dropIndex(e); dragId = null; if (moveTo(id, to)) say(describe(id)); endDrag(); });
+  rw.addEventListener('dragend', endDrag);
   const hb = $('#hint-btn'), hc = $('#hint-card');
   hb.addEventListener('click', () => { hc.hidden = false; $('#hint-wrap').hidden = true; hb.setAttribute('aria-expanded', 'true'); $('#hint-close').focus({ preventScroll:true }); });
   $('#hint-close').addEventListener('click', () => { hc.hidden = true; $('#hint-wrap').hidden = false; hb.setAttribute('aria-expanded', 'false'); hb.focus({ preventScroll:true }); });
@@ -1211,6 +1308,7 @@ function gate(){
   return { ok:true };
 }
 function renderFooter(){
+  footerWrap.removeAttribute('inert');
   const p = PAGES[state.page];
   if (p.kind==='congrats') { footerWrap.hidden = true; return; }
   footerWrap.hidden = false;
@@ -1232,5 +1330,6 @@ function renderFooter(){
 render();
 })();
 </script>
+
 </body>
 </html>
