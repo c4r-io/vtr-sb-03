@@ -36,6 +36,8 @@ p{margin:0}
 ul,ol{margin:0;padding-left:1.4em}
 button{font-family:inherit;font-size:var(--fs-md);cursor:pointer}
 :focus-visible{outline:3px solid var(--purple);outline-offset:2px}
+/* The hidden attribute always wins, even over an element's own display rule, so the page behaves the same on GitHub Pages as inside the artifact host. */
+[hidden]{display:none!important}
 .vh{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 a{color:var(--purple)}
 
