@@ -90,6 +90,8 @@ details.study[open] summary::before{transform:rotate(45deg)}
 details.study .body{padding:0 20px 16px;display:flex;flex-direction:column;gap:8px;font-size:var(--fs-md)}
 details.study .body ul li{margin-bottom:2px}
 details.study .cite{font-size:var(--fs-sm);color:var(--muted)}
+details.study .body .claim{border-top:1px solid var(--rule);padding-top:8px;margin-top:4px}
+details.study .body .claim b{font-weight:600}
 .tone{border-radius:12px;padding:14px 18px;border:1px solid}
 .tone.green{background:var(--green-tint);border-color:var(--green-text)}
 .tone.amber{background:var(--amber-tint);border-color:var(--amber)}
@@ -109,7 +111,9 @@ details.study .cite{font-size:var(--fs-sm);color:var(--muted)}
 .unit::before{content:"";position:absolute;left:0;right:0;top:0;height:6px;background:var(--unit)}
 .unit h2{margin-bottom:8px}
 .intro-panel h3{margin-bottom:8px}
-.intro-panel ol li{margin-bottom:4px}
+.intro-panel .numbered{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.intro-panel .numbered li{display:flex;gap:12px;align-items:flex-start}
+.intro-panel .numbered .badge{flex:none;width:30px;height:30px;border-radius:50%;background:var(--text);color:#fff;font-size:var(--fs-sm);font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:-2px}
 
 /* Options (ExplainedOption) */
 .optgroup{display:flex;flex-direction:column;gap:10px}
@@ -236,6 +240,7 @@ details.src .key p{font-size:var(--fs-sm);color:var(--text)}
 .statrow.full > .stat{flex-grow:1.3}
 .statrow.full .stat{display:flex;align-items:baseline;gap:4px 16px;flex-wrap:wrap}
 .statrow.full .status,.statrow.full .pct{white-space:nowrap}
+.statrow.full .stat .sub{flex:1 1 100%;margin:0}
 .statrow.full .status{font-size:var(--h4)} .statrow.full .pct{font-size:var(--fs-md)}
 .runbody > div:first-child{flex-grow:1.3}
 .statrow.full .mt{margin:0;font-size:var(--h4)}
@@ -282,14 +287,14 @@ legend.qrow .chip{align-self:center}
 /* Estimates so far (fix page): one thin bar per remedy tried, dashed line at the true value. */
 .tried{margin-top:0}
 .tried h4{font-size:var(--fs-md);margin-bottom:2px}
-.tried .trow{display:grid;grid-template-columns:minmax(90px,30%) minmax(0,1fr) auto;gap:8px;align-items:center;font-size:var(--fs-sm);padding:2px 0}
+.tried .trow{display:grid;grid-template-columns:minmax(90px,30%) minmax(0,1fr) 5em;gap:8px;align-items:center;font-size:var(--fs-sm);padding:2px 0}
 .tried .trow .tl{color:var(--muted);line-height:1.25}
 .tried .trow.cur .tl,.tried .trow.cur .tv{color:var(--purple);font-weight:600}
 .tried .tb{position:relative;height:10px;background:var(--panel);border:1px solid var(--rule);border-radius:5px}
 .tried .tb i{position:absolute;left:0;top:0;bottom:0;background:var(--mid-gray);border-radius:0 4px 4px 0;transition:width .6s}
 .tried .trow.cur .tb i{background:var(--purple)}
 .tried .tb em{position:absolute;top:-4px;bottom:-4px;border-left:2px dashed var(--takeaway);transform:translateX(-50%)}
-.tried .tv{font-variant-numeric:tabular-nums;min-width:4ch;text-align:right}
+.tried .tv{font-variant-numeric:tabular-nums;min-width:0;white-space:nowrap;text-align:right}
 .tried .trow.untried .tv{color:var(--muted);font-weight:300;font-size:var(--fs-xs)}
 .tried .trow.untried .tb{border-style:dashed}
 .tried .cap{font-size:var(--fs-xs);color:var(--muted);margin-top:4px}
@@ -307,7 +312,7 @@ legend.qrow .chip{align-self:center}
 .tip .bubble{position:absolute;left:0;bottom:calc(100% + 8px);background:#202020;color:#fff;font-size:var(--fs-sm);font-weight:300;line-height:1.4;padding:8px 10px;border-radius:8px;width:min(340px,80vw);z-index:6;display:none;outline:1px solid #fff}
 .tip.r .bubble{left:auto;right:0}
 .tip.r .bubble::after{left:auto;right:6px}
-.readout .tip > button{width:20px;height:20px;vertical-align:middle;margin-right:4px}
+.readout .tip > button{width:20px;height:20px;margin-right:2px}
 .readout .tip > button svg{width:18px;height:18px}
 .tip .bubble::after{content:"";position:absolute;left:6px;top:100%;border:7px solid transparent;border-top-color:#202020}
 .tip:hover .bubble,.tip:focus-within .bubble{display:block}
@@ -324,6 +329,9 @@ legend.qrow .chip{align-self:center}
 .meter .ticks{display:flex;justify-content:space-between;font-size:var(--fs-xs);color:var(--muted);margin:0 10px}
 .meter{container-type:inline-size}
 .meter .readout{display:flex;gap:4px 20px;flex-wrap:wrap;margin:2px 0 0;font-size:var(--fs-md)}
+.meter .readout > span{display:inline-flex;align-items:center;gap:0 4px;flex-wrap:wrap}
+.meter .readout > span > b{margin-left:.3em}
+.readout .tip{align-items:center}
 /* The readout steps down the type scale as the meter's own width shrinks, so True value, Estimate and Gap stay on one line. */
 @container (max-width:520px){.meter .readout{font-size:var(--fs-sm);gap:4px 12px}.readout .tip > button{width:18px;height:18px}.readout .tip > button svg{width:16px;height:16px}}
 @container (max-width:420px){.meter .readout{font-size:var(--fs-xs);gap:4px 10px}}
@@ -404,7 +412,7 @@ legend.qrow .chip{align-self:center}
 .rrow.ok{border-color:var(--green);background:var(--green-tint)} .rrow.ok .mark{color:var(--green)} .rrow.ok .badge{border-color:var(--green);background:#fff}
 .rrow.bad{border-color:var(--red);background:var(--red-tint)} .rrow.bad .mark{color:var(--red)}
 .rank-card h3{margin-bottom:4px}
-.rank-card > .sub{font-size:var(--fs-sm);color:var(--muted);margin-bottom:12px}
+.rank-card > .lead{font-weight:600;margin-bottom:12px}
 .rank-card .actions{margin-top:12px;align-items:center}
 /* The bar that covers the footer while a card is in hand: what was picked, and how to put it down. */
 .pickbar{position:fixed;left:0;right:0;bottom:0;z-index:25;height:calc(var(--footer-h) + env(safe-area-inset-bottom,0px));padding-bottom:env(safe-area-inset-bottom,0px);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));background:var(--purple);color:#fff;display:flex;align-items:center;gap:12px;box-shadow:0 -2px 10px rgba(0,0,0,.2);animation:rise .22s ease-out}
@@ -461,7 +469,6 @@ legend.qrow .chip{align-self:center}
 <header class="header">
   <svg class="logo" aria-hidden="true"><use href="#face-default"/></svg>
   <h1>Spot Volunteer and Non-Response Bias</h1>
-  <span class="proto">Prototype</span>
 </header>
 
 <main id="main"></main>
@@ -539,84 +546,86 @@ function simR2(remedy){
 }
 
 /* ---------- Content ---------- */
-const CLAIM1 = 'The people who joined the cohort have the same health as the adults who were invited.';
-const CLAIM2 = 'The weekly check-ins show how severe symptoms are among everyone in the study.';
+const CLAIM1 = 'Those who participated in the study are representative of all people who were invited to participate.';
+const CLAIM2 = 'The weekly check-ins identify that certain characteristics contribute to retention in studies.';
 const DOI_FRY = 'https://doi.org/10.1093/aje/kwx246';
 const DOI_PRATAP = 'https://doi.org/10.1038/s41746-020-0224-8';
 const DOI_EDWARDS = 'https://doi.org/10.1002/14651858.MR000008.pub4';
 const DOI_SINGER = 'https://doi.org/10.1177/0002716212458082';
 const DOI_HELLER = 'https://doi.org/10.1016/j.cct.2014.08.004';
 const DOI_UYBICO = 'https://doi.org/10.1007/s11606-007-0126-3';
+const DOI_GROVES = 'https://doi.org/10.1093/poq/nfl033';
 const ext = (href, text) => `<a href="${href}" target="_blank" rel="noopener">${text}<span class="vh"> (opens in a new tab)</span></a>`;
-const STUDY1 = `<p><b>UK Biobank</b> mailed invitations to about 9.2 million adults aged 40 to 69 living near one of 22 assessment centers in England, Wales and Scotland. About <b>5.5%</b> took part. The cohort is used to estimate how common diseases and risk factors are, and how they relate.</p>
-<p>${ext(DOI_FRY, 'Fry and colleagues (2017)')} compared the people who joined with the general population of the same ages. Those who joined were:</p>
-<ul><li>less likely to be obese, to smoke, or to drink alcohol daily, with fewer self-reported health conditions;</li><li>more likely to be older, female, and living in less deprived areas;</li><li>much less likely to die: at ages 70 to 74, all-cause mortality was 46% lower in men and 56% lower in women than in the general population.</li></ul>`;
-const STUDY2 = `<p><b>Remote smartphone studies</b> enroll people through an app and ask them to complete check-ins over weeks or months. ${ext(DOI_PRATAP, 'Pratap and colleagues (2020)')} pooled eight such studies run between 2014 and 2019, covering more than <b>100,000 participants</b> and about 3.5 million remote assessments.</p>
-<p>Who kept responding was not random:</p>
-<ul><li>median retention across the studies was only <b>5.5 days</b> (range 2 to 26 days);</li><li>people who <b>had the clinical condition</b> being studied stayed about 7 days longer than controls;</li><li>older participants stayed about 4 days longer;</li><li>compensation added about 22 days (in the one study that offered it) and referral by a clinician about 40 days;</li><li>most of the studies could not recruit a sample that matched the population demographically or regionally.</li></ul>
-<p>In this round the 40 ravens stand in for everyone enrolled in one such study. Every one of them is asked to complete a symptom check-in each week for six weeks. Each face shows that person's true symptom level.</p>`;
+const STUDY1 = `<p><b>UK Biobank</b> mailed invitations to about 9.2 million adults aged 40 to 69 living near one of 22 assessment centers in England, Wales, or Scotland. Only about <b>5.5%</b> responded to take part in the study. The purpose of this study was to compare how common diseases and health factors were between the cohort and publicly available data for the general population, and to assess who responded to the study compared to those who didn't.</p>
+<p>${ext(DOI_FRY, 'Fry and colleagues (2017)')} compared the people who joined the study with the general population of the same ages. They found that those who joined:</p>
+<ul><li>were less likely to be obese, to smoke, or to drink alcohol daily, and had fewer self-reported health conditions;</li><li>were more likely to be older, female, and living in less socioeconomically deprived areas;</li><li>had lower rates of mortality: for those aged 70 to 74, all-cause mortality was 46% lower in men and 56% lower in women than in the general population.</li></ul>
+<p class="claim"><b>What the study claims:</b> ${CLAIM1}</p>`;
+const STUDY2 = `<p><b>Remote smartphone studies</b> enroll people through an app and ask them to complete check-ins over weeks or months. ${ext(DOI_PRATAP, 'Pratap and colleagues (2020)')} conducted and pooled eight studies run between 2014 and 2019, covering more than <b>100,000 participants</b> and about 3.5 million remote assessments, to investigate who would continue to participate in the study.</p>
+<p>They found that who kept responding was not random:</p>
+<ul><li>median retention across the studies was only <b>5.5 days</b> (range 2 to 26 days);</li><li>people who <b>had the clinical condition</b> being studied stayed about 7 days longer than controls;</li><li>older participants stayed about 4 days longer;</li><li>compensation added about 22 days (in the one study that offered it) and referral by a clinician added about 40 days;</li><li>most of the studies could not recruit a sample that matched the population demographically or regionally.</li></ul>
+<p class="claim"><b>What the study claims:</b> ${CLAIM2}</p>
+<p>Here the 40 ravens stand in for everyone enrolled in one such study. Every one of them is asked to complete a symptom check-in each week for six weeks. Each face shows that raven's true symptom level.</p>`;
 const UNUSED_EVIDENCE = `<p>The size of each remedy's effect in this prototype is illustrative. The direction comes from these sources:</p>
 <ul>
 <li>${ext(DOI_EDWARDS, 'Edwards et al. (2009)')}, Cochrane review of 481 trials of ways to raise questionnaire response. Odds of response with a monetary incentive 1.87 (95% CI 1.73 to 2.04); with a shorter questionnaire 1.64 (1.43 to 1.87) by post and 1.73 (1.40 to 2.13) online; with follow-up contact 1.35 (1.18 to 1.55); with an offer of the survey results 1.36 (1.15 to 1.61) online.</li>
 <li>${ext(DOI_PRATAP, 'Pratap et al. (2020)')}: compensation was associated with about 22 extra days of retention in the one pooled study that offered it, and clinician referral with about 40.</li>
 <li>${ext(DOI_SINGER, 'Singer and Ye (2013)')}, review of incentive experiments: incentives raise cooperation most among groups that otherwise respond least, such as people with lower income or education, and whether that reduces or adds bias depends on how those traits relate to what is being studied.</li>
+<li>${ext(DOI_GROVES, 'Groves (2006)')}, review of nonresponse in household surveys: nonresponse bias depends on how response propensity relates to the variable being measured, not on the response rate or on who was asked, so prompting a random subset changes nothing when who answers is what drives the bias.</li>
 <li>${ext(DOI_HELLER, 'Heller et al. (2014)')} and ${ext(DOI_UYBICO, 'UyBico et al. (2007)')}, systematic reviews of recruiting underrepresented groups: multiple, flexible strategies run through providers and communities are needed, and community outreach on its own is less successful than outreach combined with other routes. This evidence is mostly descriptive, without pooled effect sizes.</li>
 </ul>`;
 
 const PREDICT1 = {
-  question: 'Of the people invited, who will sign up?',
+  question: 'Of those who were invited, who will sign up based on what Fry and colleagues (2017) found?',
   options: [
-    { id:'a', text:'A mix much like the invitation list', why:'Everyone got the same letter, but answering it is a choice, and that choice is tied to being well enough, and free enough, to come in for a visit.' },
+    { id:'a', text:'A mix of invitees will respond', why:'Everyone got the same letter, but answering it was a choice. Various factors like health, availability, and accessibility impact who will respond.' },
     { id:'b', text:'Mostly the healthier invitees', correct:true },
-    { id:'c', text:'Mostly the least healthy invitees', why:'Having the most to gain is not the same as having the time and energy to travel to an assessment center. People in poorer health turned out less, not more.' },
-    { id:'d', text:'Almost nobody', why:'Only 5.5% came, but 5.5% of 9.2 million is half a million people. The question is who those people were.' },
+    { id:'c', text:'Mostly the least healthy invitees', why:'Those with worse health were less likely to accept the invitation to participate.' },
+    { id:'d', text:'Almost nobody will respond', why:'Invitees still responded, but it was only 5.5% of the 9.2 million potential participants.' },
   ],
-  feedback: 'Only 5.5% of invitees joined, and they were healthier, older, more often female, and from less deprived areas than the people who did not. Taking part asks for a free afternoon, transport to a center, and an interest in health research, and all of those travel with being well.',
-  wrong: 'Think about what taking part costs: a free afternoon, a trip to an assessment center, and an interest in health research. Who finds that easiest?',
+  feedback: 'Invitees who were healthier, older, more often female, and from less socioeconomically deprived areas responded to the invitation to participate.',
 };
 const PREDICT2 = {
-  question: 'By week 6, who is still completing the check-ins?',
+  question: 'Based on the details of the study, by week 6, who is still completing the check-ins?',
   options: [
-    { id:'a', text:'A mix much like week 1', why:'The prompts go out evenly. The replies do not come back evenly, because only the people with a reason to answer keep answering.' },
-    { id:'b', text:'Mostly the people with the most symptoms', correct:true },
-    { id:'c', text:'Mostly the people with the fewest symptoms', why:'Energy is not the issue, motivation is. People with nothing to report are the first to stop opening the app.' },
-    { id:'d', text:'Almost nobody', why:'Median retention was 5.5 days, yet some people stayed for the whole study. The question is who stayed.' },
+    { id:'a', text:'A mix of participants much like at the beginning of the study', why:'At the beginning of the study, more participants responded to the prompt. As time went on, only those who felt a need to answer continued to do so.' },
+    { id:'b', text:'Mostly the participants with the most clinical symptoms', correct:true },
+    { id:'c', text:'Mostly the participants with the fewest symptoms', why:'Those with nothing to report are the first to stop opening the app and responding to the prompts.' },
+    { id:'d', text:'Almost nobody responded', why:'Median retention was 5.5 days, yet some people stayed for the whole study.' },
   ],
-  feedback: 'Across 100,000 participants, people who had the condition being studied kept responding about a week longer than those who did not, and median retention was only 5.5 days. Answering costs time and attention, and people with symptoms have a reason to keep reporting them.',
-  wrong: 'Think about who has a reason to keep opening the app week after week, and who has nothing much to report.',
+  feedback: 'Across 100,000 participants, those who had a condition being studied kept responding about a week longer than those who did not, and median retention was only 5.5 days.',
 };
 const LEAK1 = {
   stages: [
-    { id:'invite',   lbl:'Invited',   note:'adults aged 40 to 69, one letter each', why:'Everyone on the list got the same letter. The invitation did not pick anyone out.' },
-    { id:'enrol',    lbl:'Signed up', note:'the people who chose to take part', correct:true },
-    { id:'followup', lbl:'Assessed',  note:'everyone who signed up was measured', why:'Nobody dropped out between signing up and being assessed. The numbers did not change here.' },
+    { id:'invite',   lbl:'Invited',   note:'Adults aged 40 to 69 were sent one letter each', why:'Everyone on the list got the same letter, so this is not where the sample varied.' },
+    { id:'enrol',    lbl:'Signed up', note:'People chose to take part', correct:true },
+    { id:'followup', lbl:'Assessed',  note:'Everyone who signed up was measured', why:'Nobody was lost between signing up and being assessed.' },
   ],
-  takeawayTitle: 'Volunteer bias',
-  takeaway: 'Only people who choose to take part are counted, and that choice is tied to the thing being studied. UK Biobank is enormous, yet its participants are so much healthier than the population that death rates in the cohort run about half the national rate. Size did not fix that, because the 5.5% who volunteered were never a random 5.5%.',
+  correct: '<b>Correct.</b> Everyone who signed up was assessed. The sample became skewed based on who was interested in participating.',
+  takeawayTitle: 'This is an example of volunteer bias',
+  takeaway: 'Only people who choose to take part are counted in the final sample. Even though the UK Biobank is enormous, its participants are much healthier than the population. Even when trying to recruit a larger sample, volunteer bias can still occur.',
 };
 const LEAK2 = {
   stages: [
-    { id:'enrol',    lbl:'Enrolled',  note:'everyone in the study', why:'The people who enrolled were a fair mix of symptom levels. The sample was right at the start.' },
-    { id:'week1',    lbl:'Answered in week 1', note:'nearly everyone', why:'Week 1 heard from nearly everyone, and the mix still matched the people enrolled.' },
-    { id:'followup', lbl:'Still answering in week 6', note:'the people who kept responding', correct:true },
+    { id:'enrol',    lbl:'Enrolled',  note:'Everyone in the study', why:'The participants who enrolled were a fair mix of symptom levels.' },
+    { id:'week1',    lbl:'Answered in week 1', note:'Nearly everyone', why:'Week 1 heard from nearly everyone and consisted of a diverse sample that matched the population.' },
+    { id:'followup', lbl:'Still answering in week 6', note:'The participants who kept responding', correct:true },
   ],
-  takeawayTitle: 'Non-response bias',
-  takeaway: 'The people who answer differ systematically from the people who do not. Here the people who stopped were the ones with fewer symptoms, and their silence pushed the average up week by week. The study started with the right people and lost the wrong ones.',
+  correct: '<b>Correct!</b> As time went on, the responses from only those who kept responding skewed the sample.',
+  takeawayTitle: 'This is an example of non-response bias',
+  takeaway: 'The people who answer differ systematically from the people who do not. Here the people who stopped were the ones with fewer symptoms, which increased the average symptom severity. For studies, sometimes our data are influenced simply by who responds vs. who doesn\'t.',
 };
-// Why the leak happened: select all that apply, checked on demand, retry until every correct reason is found.
+// Why the sample skewed: select all that apply, checked on demand, retry until every correct reason is found.
 const WHY1 = { question: 'Why did the sample skew at sign-up? Select all that apply.', options: [
-  { id:'cost',    text:'Taking part cost a free afternoon and a trip to a center', correct:true, why:'Right. The cost of taking part is paid in time, mobility and energy, and people in good health have more of all three to spare.' },
-  { id:'letter',  text:'The invitation letter only went to healthy people', why:'Everyone on the list got the same letter. The skew came from who answered it, not from who received it.' },
-  { id:'interest',text:'People drawn to health research tend to be health-conscious already', correct:true, why:'Right. Interest in a health study is not spread evenly. It runs with not smoking, drinking less and keeping healthier habits, which is what Fry and colleagues saw in the cohort.' },
-  { id:'rules',   text:'The eligibility rules excluded people in poor health', why:'There were no health-based exclusions. People in poor health were invited and simply came less often.' },
-  { id:'few',     text:'Only 5.5% took part, so the sample was too small', why:'Half a million people is not a small sample. The problem is who they were, not how many.' },
+  { id:'cost',    text:'Taking part in the study cost a free afternoon and a trip to a center', correct:true, why:'Correct. Participation is dependent on whether the participants were available, had the means to get to the study, and felt well enough to participate.' },
+  { id:'letter',  text:'The invitation letter only went to healthy people', why:'Everyone on the list got the same letter, so the issue occurred somewhere else.' },
+  { id:'interest',text:'People drawn to health research tend to be health-conscious already', correct:true, why:'Correct. The UK Biobank study found that most participants were healthier overall. They reported healthier habits, which could have skewed the sample.' },
+  { id:'rules',   text:'The eligibility rules excluded people in poor health', why:'There were no health-based exclusions. Those with poorer health simply didn\'t volunteer for the study.' },
 ] };
 const WHY2 = { question: 'Why did the least symptomatic people stop answering? Select all that apply.', options: [
-  { id:'nothing', text:'People with nothing to report have little reason to keep opening the app', correct:true, why:'Right. A weekly symptom check-in is a chore when the answer is always "none". The people it serves least are the first to let it go.' },
-  { id:'cost',    text:'Every check-in costs time and attention, and symptoms are what make that cost worth paying', correct:true, why:'Right. The burden is the same for everyone, but the payoff is not. People tracking real symptoms get something back for the effort.' },
-  { id:'prompts', text:'The app stopped prompting people who had no symptoms', why:'Everyone was prompted every week. The prompts went out evenly; the replies did not come back evenly.' },
-  { id:'paid',    text:'People with symptoms were paid more to respond', why:'Nobody in this study was paid by symptom level. Payment, where it existed, was the same for everyone.' },
-  { id:'short',   text:'Six weeks is too short for anyone to drop out', why:'Median retention across these studies was 5.5 days. Six weeks is long enough to lose most of a sample.' },
+  { id:'nothing', text:'People with nothing to report may have felt little reason to keep opening the app', correct:true, why:'For the healthy controls, it may have seemed tedious to continue responding to the survey and inputting the same results.' },
+  { id:'cost',    text:'Every check-in costs time and attention, and those with symptoms are more invested in the outcomes of the study', correct:true, why:'People tracking real symptoms are more likely to put in more effort when a study is assessing or asking questions related to those symptoms.' },
+  { id:'prompts', text:'The app stopped prompting people who had no symptoms', why:'Everyone was prompted every week, but the participants were the ones who stopped responding.' },
+  { id:'paid',    text:'People with symptoms were paid more to respond', why:'Nobody in this study was paid by symptom level. When there was payment offered, it was the same for everyone.' },
 ] };
 /* Checkbox option cards. `right` ids are confirmed correct (green, locked), `wrong` ids are knocked out (red, locked), the rest stay selectable. */
 function checksHTML(name, opts, picks, right, wrong, done){
@@ -628,67 +637,65 @@ function checksHTML(name, opts, picks, right, wrong, done){
     return `<label class="${cls}"><input type="checkbox" name="${name}" value="${o.id}" id="${name}-${o.id}" ${(sel||isR)?'checked':''} ${(isR||isW||done)?'disabled':''} ${ex?`aria-describedby="${name}-${o.id}-x"`:''}><span class="label">${o.text}</span>${mark}${ex?`<span class="expl" id="${name}-${o.id}-x">${ex}</span>`:''}</label>`;
   }).join('');
 }
-// Remedies. `best` marks the one that closes most of the gap; the gate waits for it.
+// Strategies. `best` marks the one that closes most of the gap; the gate waits for it.
 const REMEDIES1 = [
-  { id:'more', short:'More invitations', text:'Mail more invitations', sub:'Send the same letter to another nine million people.', tone:'grey',  phrase:'No change.', note:'More letters reach more of the same kind of volunteer. A bigger sample of the wrong people is still the wrong people.', evidence:`${ext(DOI_FRY,'Fry et al. 2017')}` },
-  { id:'pay', short:'Compensate', text:'Compensate people for their time', sub:'Cover travel and pay for the afternoon.', tone:'amber', phrase:'Part of the gap closed.', note:'Paying for time lowers the cost of taking part, which matters most to people with less time and money. Check who the payment attracts: if lower income is tied to what you are studying, compensation can add a bias of its own.', evidence:`${ext(DOI_EDWARDS,'Edwards et al. 2009')}, ${ext(DOI_SINGER,'Singer and Ye 2013')}` },
-  { id:'outreach', short:'Several routes', text:'Use several recruitment routes', sub:'Add social media, community health workers, clinics and local organizations alongside the mailed letter.', tone:'green', phrase:'Most of the gap closed.', note:'Different routes reach different people. Working through trusted community members and clinics brings in invitees a letter alone never would. A small gap remains: no recruitment plan enrolls everyone.', best:true, evidence:`${ext(DOI_HELLER,'Heller et al. 2014')}, ${ext(DOI_UYBICO,'UyBico et al. 2007')}` },
-  { id:'motivate', short:'Explain benefits', text:'Explain what participants get out of it', sub:'Say in the letter how the study helps science, society and the participant, without saying what you expect to find.', tone:'amber', phrase:'A little of the gap closed.', note:'A reason to take part lifts sign-up a little in every group. On its own it still reaches mostly the people who were already inclined to come.', evidence:`${ext(DOI_EDWARDS,'Edwards et al. 2009')}` },
-  { id:'monitor', short:'Track and adjust', text:'Track who is not enrolling and adjust', sub:'Compare sign-ups with the invitation list each month and re-contact the groups that are missing.', tone:'amber', phrase:'Part of the gap closed.', note:'Knowing who is missing lets you go after them. It works better when paired with a way to actually reach them.', evidence:`${ext(DOI_HELLER,'Heller et al. 2014')}` },
+  { id:'more', short:'More invitations', text:'Mail more invitations', sub:'Send the same letter to another nine million people.', tone:'grey',  phrase:'No change.', note:'More letters are sent out, but still only those who are interested or in the healthier sample volunteer.', evidence:`${ext(DOI_FRY,'Fry et al. 2017')}` },
+  { id:'pay', short:'Compensate', text:'Compensate people for their time', sub:'Cover travel and pay for the afternoon.', tone:'amber', phrase:'Part of the gap closed.', note:'Compensating participants has been shown to help with recruitment, especially for those with less time or those with lower income.', evidence:`${ext(DOI_EDWARDS,'Edwards et al. 2009')}, ${ext(DOI_SINGER,'Singer and Ye 2013')}` },
+  { id:'outreach', short:'Several routes', text:'Use several recruitment routes', sub:'Try different recruitment methods such as outreach via social media, community health workers, clinics and local organizations alongside the mailed letter.', tone:'green', phrase:'Most of the gap closed.', note:'Different routes reach different people. Working through trusted community members and clinics brings in invitees a letter alone never would. A small gap remains because no recruitment plan enrolls everyone.', best:true, evidence:`${ext(DOI_HELLER,'Heller et al. 2014')}, ${ext(DOI_UYBICO,'UyBico et al. 2007')}` },
+  { id:'motivate', short:'Explain benefits', text:'Explain what participants get out of it', sub:'Make the letter relevant by clearly stating why the study matters to people like them and offer to send them the results, without saying what you expect to find.', tone:'amber', phrase:'A bit of the gap closed.', note:'A reason to take part lifts sign-up a little. But it still reaches mostly the people who were already inclined to come.', evidence:`${ext(DOI_EDWARDS,'Edwards et al. 2009')}` },
+  { id:'monitor', short:'Track and adjust', text:'Track who is not enrolling and adjust', sub:'Compare sign-ups with the invitation list each month and re-contact the groups that are missing.', tone:'amber', phrase:'Part of the gap closed.', note:'Knowing who is missing helps you determine which groups you should recruit more of. It works better when paired with a way to actually reach them, and this strategy alone could introduce its own bias.', evidence:`${ext(DOI_HELLER,'Heller et al. 2014')}` },
 ];
 const REMEDIES2 = [
-  { id:'more', short:'More participants', text:'Enroll more participants', sub:'Open the app to another ten thousand people.', tone:'grey',  phrase:'No change.', note:'A bigger study loses the same people in the same order. The average still drifts up by week 6.', evidence:`${ext(DOI_PRATAP,'Pratap et al. 2020')}` },
-  { id:'remind', short:'Reminders', text:'Send reminders and explain why it matters', sub:'A nudge on day 3 and day 5, with a line on what the check-ins are for.', tone:'amber', phrase:'Part of the gap closed.', note:'Reminders and a reason pull back some of the people who drifted off, but the least engaged still stay away.', evidence:`${ext(DOI_EDWARDS,'Edwards et al. 2009')}` },
-  { id:'shorten', short:'Two questions', text:'Cut the check-in to two questions', sub:'Under a minute, no sign-in.', tone:'green', phrase:'Most of the gap closed.', note:'Cutting the burden keeps people with few symptoms answering, so the sample stays like the people who enrolled.', best:true, evidence:`${ext(DOI_EDWARDS,'Edwards et al. 2009')}` },
-  { id:'random', short:'Random half', text:'Prompt a random half of participants each week', sub:'Instead of everyone.', tone:'grey',  phrase:'No change.', note:'Everyone was already being prompted. Choosing who to prompt at random does nothing, because the leak is in who keeps answering, not in who was asked.', evidence:`` },
-  { id:'pay', short:'Pay per check-in', text:'Compensate people for each check-in', sub:'A small payment per completed week.', tone:'amber', phrase:'Part of the gap closed.', note:'Payment keeps more people answering, with the same caution as before about who the money attracts.', evidence:`${ext(DOI_PRATAP,'Pratap et al. 2020')}, ${ext(DOI_EDWARDS,'Edwards et al. 2009')}` },
+  { id:'more', short:'More participants', text:'Enroll more participants', sub:'Open the app to another ten thousand people.', tone:'grey',  phrase:'No change.', note:'A bigger study doesn\'t mean that you\'ll recruit more or less of a group. Based on the results from the study, retention would still occur.', evidence:`${ext(DOI_PRATAP,'Pratap et al. 2020')}` },
+  { id:'remind', short:'Reminders', text:'Send reminders and explain why it matters', sub:'A nudge on day 3 and day 5, with a line on what the check-ins are for.', tone:'amber', phrase:'Part of the gap closed.', note:'Reminders could help engage some participants, but others may become annoyed by constant check-ins and stop responding. Being respectful of the participants\' time is something that needs to be balanced.', evidence:`${ext(DOI_EDWARDS,'Edwards et al. 2009')}` },
+  { id:'shorten', short:'Easier questions', text:'Cut the check-in to two simple questions', sub:'Under a minute, linked to their account.', tone:'green', phrase:'Most of the gap closed.', note:'By making the survey easier you can capture more of the sample, but this is a tradeoff on what information you can collect.', best:true, evidence:`${ext(DOI_EDWARDS,'Edwards et al. 2009')}` },
+  { id:'random', short:'Random prompting', text:'Prompt a random half of participants each week', sub:'Instead of everyone.', tone:'grey',  phrase:'No change.', note:'Everyone was already being prompted. Choosing who to prompt at random does nothing, because the retention is in who keeps answering, not in who was asked.', evidence:`${ext(DOI_GROVES,'Groves 2006')}` },
+  { id:'pay', short:'Pay per check-in', text:'Compensate people for each check-in', sub:'A small payment per completed week.', tone:'amber', phrase:'Part of the gap closed.', note:'Payment keeps more people answering, but retention will still occur over time.', evidence:`${ext(DOI_PRATAP,'Pratap et al. 2020')}, ${ext(DOI_EDWARDS,'Edwards et al. 2009')}` },
 ];
 const SCEN1 = [
-  { id:'mix',       label:'A mix much like the invitation list', rates:[.42,.42,.42,.42,.42], note:'If sign-up were unrelated to health, the cohort would land on the true value, give or take a raven.' },
-  { id:'base', label:'Mostly the healthier invitees (what happened)', rates:'base', note:'The healthier people came. The cohort understates poor health by most of its true share.' },
-  { id:'sickest',   label:'Mostly the least healthy invitees', rates:[.10,.20,.40,.70,.90], note:'If the unwell had been the ones to come, the cohort would overstate poor health instead. Selection can push either way.' },
-  { id:'nobody',    label:'Almost nobody', rates:[.05,.05,.05,.05,.05], note:'With a handful of people the estimate is at the mercy of who those few happen to be.' },
+  { id:'mix',       label:'A mix of invitees will respond', rates:[.42,.42,.42,.42,.42], note:'If sign-up were more representative of the population, then the cohort estimate would be closer to the true value.' },
+  { id:'base', label:'Mostly the healthier invitees (what happened)', rates:'base', note:'Since mostly healthier invitees responded, the cohort estimate underestimates those with poorer health compared to the true population.' },
+  { id:'sickest',   label:'Mostly the least healthy invitees', rates:[.10,.20,.40,.70,.90], note:'If mostly those in poorer health responded, then it is likely that we would see the opposite result, where the cohort estimate would overstate those who are in poorer health.' },
+  { id:'nobody',    label:'Almost nobody will respond', rates:[.05,.05,.05,.05,.05], note:'If only a handful of invitees responded, then the researchers wouldn\'t have been able to make meaningful comparisons as they would be underpowered.' },
 ];
 const SCEN2 = [
-  { id:'mix',         label:'A mix much like week 1', rates:[.80,.80,.80,.80,.80], note:'If dropout were unrelated to symptoms, the week 6 average would sit near the true value even with fewer people answering.' },
-  { id:'base', label:'Mostly the people with the most symptoms (what happened)', rates:'base', note:'The least symptomatic stopped first, so the average climbs week by week without anyone getting worse.' },
-  { id:'fewest',      label:'Mostly the people with the fewest symptoms', rates:[.98,.92,.80,.68,.55], note:'If the symptomatic had been the ones to quit, the average would fall instead. Same study, opposite error.' },
-  { id:'nobody',      label:'Almost nobody', rates:[.40,.40,.40,.40,.40], note:'When nearly everyone stops, there is no week 6 estimate to defend at all.' },
+  { id:'mix',         label:'A mix of participants much like at the beginning of the study', rates:[.80,.80,.80,.80,.80], note:'If the loss of participants were unrelated to symptoms, the week 6 average would sit closer to the true value.' },
+  { id:'base', label:'Mostly the participants with the most clinical symptoms (what happened)', rates:'base', note:'The least symptomatic stopped responding first, so the average climbs week by week simply based on who is responding to the survey (those with more clinical symptoms).' },
+  { id:'fewest',      label:'Mostly the participants with the fewest symptoms', rates:[.98,.92,.80,.68,.55], note:'If the symptomatic left the study, then the average would decrease.' },
+  { id:'nobody',      label:'Almost nobody responded', rates:[.40,.40,.40,.40,.40], note:'If the sample size is too small, then the researchers can\'t make meaningful comparisons.' },
 ];
 const IMPACT = [
-  { key:'q1', study:'UK Biobank', question:'A team uses the UK Biobank cohort to estimate how common smoking, obesity and chronic illness are among UK adults aged 40 to 69. What happens to those estimates?',
+  { key:'q1', study:'UK Biobank', question:'Our study mimics the UK Biobank cohort, where healthier invitees responded. How does the cohort\'s estimate compare to the true value?',
     options: [
-      { id:'a', text:'They run too low', correct:true },
-      { id:'b', text:'They run too high', why:'Screening might add a diagnosis here and there, but participants were measurably healthier on nearly everything, with death rates about half the national rate.' },
-      { id:'c', text:'They are about right', why:'Size does not fix selection. Half a million volunteers are still volunteers, and they lean the same way the first thousand did.' },
+      { id:'a', text:'The estimate is too low compared to the true value', correct:true },
+      { id:'b', text:'The estimate is too high compared to the true value', why:'It was seen that those who responded were healthier. As such, those with poorer health outcomes are underreported. Try again!' },
+      { id:'c', text:'The estimate is about the same as the true value', why:'The cohort\'s estimate is off compared to the true value. Is it higher or lower? Try again!' },
     ],
-    wrong: 'Think about which direction the cohort leans compared with the people invited, and whether more of the same volunteers would change that.',
-    feedback: 'Fry and colleagues found exactly this: participants were less likely to be obese or to smoke, reported fewer conditions, and died at about half the national rate. Any prevalence read straight off the cohort understates the population, and sample size does nothing about it. Comparisons between groups inside the cohort can still be informative, but only if the thing that drove people to volunteer is not tied to both the exposure and the outcome being compared.' },
-  { key:'q2', study:'Smartphone study', question:'The smartphone study reports that average symptom severity rose over the six weeks. What is the most defensible reading?',
+    feedback: 'As seen in the UK Biobank study, they were less likely to capture responses from those with poorer health. Participants were less likely to be obese or to smoke and reported fewer conditions.' },
+  { key:'q2', study:'Smartphone study', question:'The smartphone study reports that average symptom severity rose over the six weeks. What does this result tell us compared to the true value?',
     options: [
-      { id:'a', text:'Symptoms got worse over time', why:'The averages rose, but each week\'s average comes from a different, smaller group. Nobody had to get worse for the number to climb.' },
-      { id:'b', text:'The people answering changed, so the trend cannot be separated from who dropped out', correct:true },
-      { id:'c', text:'The app is accurate because the study is large', why:'Size says nothing about who kept answering. A large study that loses its least symptomatic participants is a large biased study.' },
+      { id:'a', text:'Symptoms got worse over time', why:'The averages rose, but that\'s because each week\'s average comes from a different, smaller group that consists of those with worse symptoms.' },
+      { id:'b', text:'We can\'t tell if the trend is true or based on those who were lost from the study', correct:true },
+      { id:'c', text:'The result is accurate because the study is large and people did keep responding over time', why:'Having a large sample size is good, but if it\'s not representative of the population you are trying to study, then it makes interpretation of the results tricky.' },
     ],
-    wrong: 'Ask who the week 6 average is computed from, and whether that is the same group as week 1.',
-    feedback: 'The study started with the right people and lost the healthiest ones first, so the rising average is a change in who answers, not evidence that anyone got worse. A trend built on a shrinking, self-selected sample cannot support an inference about the population it started with. Pratap and colleagues saw this pattern across eight studies: people with the condition stayed, controls left, and most studies could not keep a representative sample.' },
+    feedback: 'The study started with a large sample, and over time participants stopped responding. Those who kept responding were those who had more severe symptoms. Pratap and colleagues saw this pattern across eight studies, where people with clinical conditions stayed while controls left, and most studies could not keep a representative sample of the population.' },
 ];
-const AGAIN = 'Not the biggest improvement. Try another remedy.';
-const FOUND = 'Best remedy found. Try the others too if you like, then continue.';
+const AGAIN = 'This helped but isn\'t the best option. Try another strategy.';
+const FOUND = 'Best strategy found. Try the others too if you like, then continue.';
 
 /* ---------- State ---------- */
 const fresh = () => ({ pred:null, predDone:false, predWrong:[], ran:false, seen:[], leak:null, leakDone:false, leakWrong:[], why:{ picks:[], right:[], wrong:[], checks:0, done:false }, tried:[], remedy:null, best:false, rank:{ order:null, checks:0, done:false }, scen:null, judge:{ pick:null, wrong:[], done:false } });
 const state = { page:0, r1:fresh(), r2:fresh(), legendOpen:false };
 const PAGES = [
   { kind:'intro' },
-  { kind:'predict', round:1, left:'Round 1: UK Biobank' },
-  { kind:'run',     round:1, left:'Round 1: UK Biobank' },
-  { kind:'leak',    round:1, left:'Round 1: UK Biobank' },
-  { kind:'fix',     round:1, left:'Round 1: UK Biobank' },
-  { kind:'predict', round:2, left:'Round 2: Smartphone study' },
-  { kind:'run',     round:2, left:'Round 2: Smartphone study' },
-  { kind:'leak',    round:2, left:'Round 2: Smartphone study' },
-  { kind:'fix',     round:2, left:'Round 2: Smartphone study' },
+  { kind:'predict', round:1, left:'Study 1: UK Biobank' },
+  { kind:'run',     round:1, left:'Study 1: UK Biobank' },
+  { kind:'leak',    round:1, left:'Study 1: UK Biobank' },
+  { kind:'fix',     round:1, left:'Study 1: UK Biobank' },
+  { kind:'predict', round:2, left:'Study 2: Smartphone study' },
+  { kind:'run',     round:2, left:'Study 2: Smartphone study' },
+  { kind:'leak',    round:2, left:'Study 2: Smartphone study' },
+  { kind:'fix',     round:2, left:'Study 2: Smartphone study' },
   { kind:'takeaways', left:'Takeaways' },
   { kind:'congrats' },
 ];
@@ -703,7 +710,7 @@ const legendHTML = (round) => `<details class="legend" id="legend" ${state.legen
   <ol>${GROUPS.map(g => `<li>${icon('face-'+g.face)}<b>${g.score}</b>${g.short}</li>`).join('')}</ol>
   <div class="scale"><span>${round===1?'Healthiest':'Fewest symptoms'}</span><span>${round===1?'Least healthy':'Most symptoms'}</span></div></div></details>`;
 /* The flock strip: title, all 40 heads in a line, and the legend drawer. */
-const stripHTML = (round) => `<section class="card strip flock-panel"><div class="top"><h3>${round===1?'People invited':'People enrolled'}</h3><span class="sub" id="pop-sub"><b>About the flock.</b> These 40 ravens are a hypothetical population built to show the pattern this study found, not its actual numbers. Each face is a true value the study cannot see until that person takes part. The true value on the meter is the answer for all 40, which a study could only know if every one of them took part.</span></div>
+const stripHTML = (round) => `<section class="card strip flock-panel"><div class="top"><h3>${round===1?'Ravens invited':'Ravens enrolled'}</h3><span class="sub" id="pop-sub"><b>About the flock.</b> These 40 ravens are a hypothetical population built to show the pattern this study found, not its actual numbers. Each face shows how that raven would have answered, but the study only reflects the data if a raven took part in the study. The true value on the meter is what the study would find if all 40 ravens took part.</span></div>
   <div class="flock" id="pop">${flockHTML()}</div>${legendHTML(round)}</section>`;
 const wireLegend = () => { const d = $('#legend'); if (d) d.addEventListener('toggle', () => { state.legendOpen = d.open; }); };
 /* The meter. The truth and estimate pins are buttons: hovering or focusing one outlines the ravens it counts. */
@@ -738,17 +745,17 @@ function setMeter(cfg, est){
   fitTips($('#meter'));
 }
 /* Faint dashed marker for the no-remedy estimate, so a remedy's movement has a reference point. */
-function setBasePin(cfg, est){ const pct = v => Math.max(0, Math.min(100, ((v - cfg.min) / (cfg.max - cfg.min)) * 100)); const b = $('#m-base'), t = $('#m-base-tag'); b.hidden = false; t.hidden = false; b.style.left = pct(est)+'%'; t.textContent = 'No remedy: ' + cfg.fmt(est); keepIn(t, pct(est)); }
-const METER1 = { title:'Share in poorer health', min:0, max:.5, truth:R1_TRUTH, ticks:['0%','10%','20%','30%','40%','50%'], estLabel:'Cohort\'s estimate', fmt:v=>Math.round(v*100)+'%', fmtGap:v=>(v>=0?'+':'')+Math.round(v*100)+' points',
+function setBasePin(cfg, est){ const pct = v => Math.max(0, Math.min(100, ((v - cfg.min) / (cfg.max - cfg.min)) * 100)); const b = $('#m-base'), t = $('#m-base-tag'); b.hidden = false; t.hidden = false; b.style.left = pct(est)+'%'; t.textContent = 'No new strategy: ' + cfg.fmt(est); keepIn(t, pct(est)); }
+const METER1 = { title:'Percent in poorer health', min:0, max:.5, truth:R1_TRUTH, ticks:['0%','10%','20%','30%','40%','50%'], estLabel:'Cohort\'s estimate', fmt:v=>Math.round(v*100)+'%', fmtGap:v=>(v>=0?'+':'')+Math.round(v*100)+' points',
   how:'The 40 ravens are a hypothetical population built to show the pattern UK Biobank found, not its actual figures. Each face is a true health score the study cannot see until that person takes part.',
-  tipTruth:'The share of all 40 invited ravens whose face is 4 or 5: 9 of 40, or 23%. A study could only know this if every invitee took part.',
-  tipEst:'The same share counted only among the ravens who signed up. This is the number the study actually sees.',
-  tipGap:'Estimate minus true value, in percentage points. Negative means the cohort understates poor health; positive means it overstates it.' };
-const METER2 = { title:'Average symptom score (1 to 5)', min:1, max:5, truth:R2_TRUTH, ticks:['1','2','3','4','5'], estLabel:'Study\'s estimate', fmt:v=>v.toFixed(2), fmtGap:v=>(v>=0?'+':'')+v.toFixed(2),
+  tipTruth:'The percent of all 40 invited ravens whose face is 4 or 5: 9 out of 40, or 23%. You would only know this value if every invitee took part in your study.',
+  tipEst:'The percent of ravens whose face is 4 or 5 among only those who replied to your study. This is the result the study reports.',
+  tipGap:'Estimate minus true value, in percentage points. A negative value means the cohort understates those in poor health, while a positive value means it overstates it.' };
+const METER2 = { title:'Average clinical symptom score (1 to 5)', min:1, max:5, truth:R2_TRUTH, ticks:['1','2','3','4','5'], estLabel:'Study\'s estimate', fmt:v=>v.toFixed(2), fmtGap:v=>(v>=0?'+':'')+v.toFixed(2),
   how:'The 40 ravens are a hypothetical population built to show the pattern Pratap and colleagues found, not their actual figures. Each face is a true symptom score the study cannot see until that person answers.',
-  tipTruth:'The average face score of all 40 enrolled ravens: 2.50. A study could only know this if everyone answered.',
-  tipEst:'The average face score among only the ravens who answered that week. This is the number the study actually sees.',
-  tipGap:'Estimate minus true value. Positive means the study overstates symptoms; negative means it understates them.' };
+  tipTruth:'The average face score of all 40 enrolled ravens: 2.50. A study would only know this if everyone answered the survey.',
+  tipEst:'The average face score among only the ravens who answered that week. This is the number the study actually reports.',
+  tipGap:'Estimate minus true value. A positive value means the study overstates symptoms, while a negative value means it understates them.' };
 
 /* `knocked` lists option ids already tried and ruled out: mid grey, locked, stated in text. */
 /* `expl(o)` returns the explanation to reveal inside that option's card (ExplainedOption pattern), or '' for none.
@@ -772,19 +779,19 @@ function simPanelsHTML(round, runLabel, leftTop='', { meterHidden=false } = {}){
   const cfg = round===1 ? METER1 : METER2;
   const SCEN = round===1 ? SCEN1 : SCEN2;
   const sampleCard = `<section class="card flock-panel sample-panel" id="run-card">
-      <div class="rungrp"><p class="lead">${round===1?'40 invitations are ready to go out.':'40 people are enrolled and the first check-in is ready to send.'}</p>${runLabel?`<button type="button" class="btn primary" id="run-btn">${icon('i-play')} ${runLabel}</button>`:''}<p class="sub" id="sample-sub"></p></div><div class="statrow full" id="statrow" ${meterHidden?'hidden':''}><div class="stat"><div class="status" id="stage-now"></div><div class="pct" id="sample-pct"></div></div><div><h4 class="mt">${cfg.title}</h4></div></div><div class="runbody"><div>
-      <div id="run-out" ${meterHidden?'hidden':''}>${round===2?`<div class="weeks" id="weeks"><div class="now" id="week-now">&nbsp;</div><span class="hint">After the run, select a week to look at it again.</span><div class="wks" role="group" aria-label="Weeks" id="wks">${Array.from({length:6},(_,i)=>`<button type="button" class="wk" id="wk-${i+1}" data-w="${i+1}" disabled>Week ${i+1}</button>`).join('')}</div></div>`:''}
+      <div class="rungrp"><p class="lead">${round===1?'40 invitations are ready to send!':'40 participants are enrolled and the first check-in is ready to send!'}</p>${runLabel?`<button type="button" class="btn primary" id="run-btn">${icon('i-play')} ${runLabel}</button>`:''}</div><div class="statrow full" id="statrow" ${meterHidden?'hidden':''}><div class="stat"><div class="status" id="stage-now"></div><div class="pct" id="sample-pct"></div><p class="sub" id="sample-sub"></p></div><div><h4 class="mt">${cfg.title}</h4></div></div><div class="runbody"><div>
+      <div id="run-out" ${meterHidden?'hidden':''}>${round===2?`<div class="weeks" id="weeks"><div class="now" id="week-now">&nbsp;</div><span class="hint">Here you can select a week to look at it again.</span><div class="wks" role="group" aria-label="Weeks" id="wks">${Array.from({length:6},(_,i)=>`<button type="button" class="wk" id="wk-${i+1}" data-w="${i+1}" disabled>Week ${i+1}</button>`).join('')}</div></div>`:''}
       <div class="flock sample" id="sample"></div></div>
       </div>
       <div id="meter-wrap" class="${meterHidden?'ghost':''}">${meterHTML(cfg, true)}</div></div>
-      <div class="whatif" id="whatif" hidden><h4>What if a different group had ${round===1?'signed up':'kept answering'}? <span class="sub">Switch through each possibility to see where the estimate would land. <b id="seen-count"></b></span></h4>
+      <div class="whatif" id="whatif" hidden><h4>What if a different group of ravens had ${round===1?'signed up':'kept answering'}? <span class="sub">Switch through each possibility to see what happens to the estimate. <b id="seen-count"></b></span></h4>
         <div class="pills" role="group" aria-label="Possibilities" id="scen-pills"></div><div id="scen-note"></div></div>
       <details class="legend src" id="src" ${meterHidden?'hidden':''}><summary>Where these numbers come from</summary><div class="key"><p>${round===1
-        ? `The pattern of who signs up follows ${ext(DOI_FRY,'Fry et al. (2017)')}, who compared UK Biobank participants with the general population. The 40 ravens and their numbers are hypothetical, built to show that pattern.`
-        : `The pattern of who keeps answering follows ${ext(DOI_PRATAP,'Pratap et al. (2020)')}, who pooled retention across eight remote smartphone studies. The 40 ravens and their numbers are hypothetical, built to show that pattern.`}</p></div></details>
+        ? `The pattern of who signs up follows ${ext(DOI_FRY,'Fry et al. (2017)')}, who compared UK Biobank participants with the general population. The 40 ravens and the results are hypothetical. Here, we aim to show the pattern of what can happen to results depending on your sample.`
+        : `The pattern of who keeps answering follows ${ext(DOI_PRATAP,'Pratap et al. (2020)')}, who conducted a study that pooled retention across eight remote smartphone studies. The 40 ravens and their numbers are hypothetical and were built to show that pattern.`}</p></div></details>
     </section>`;
   const q = IMPACT[round-1];
-  const judge = `<section class="card" id="judge-card" hidden><p class="sub">Now that you have seen where the estimate lands, decide what this bias does to the conclusions a researcher can draw.</p>
+  const judge = `<section class="card" id="judge-card" hidden>
       <form id="judge-form"><fieldset class="optgroup"><legend>${q.question}</legend></fieldset></form></section>`;
   return `${stripHTML(round)}${leftTop}${sampleCard}${judge}`;
 }
@@ -794,23 +801,23 @@ function drawTried(round, R, REM){
   const cfg = round===1 ? METER1 : METER2;
   const pct = v => Math.max(0, Math.min(100, ((v - cfg.min) / (cfg.max - cfg.min)) * 100));
   const estOf = id => round===1 ? simR1(id).share : simR2(id).final.mean;
-  const rows = [{ id:'base', label:'No remedy', est:estOf('base'), shown:true }].concat(REM.map(r => ({ id:r.id, label:r.short, est:estOf(r.id), shown:R.best || R.tried.includes(r.id) })));
+  const rows = [{ id:'base', label:'No strategy', est:estOf('base'), shown:true }].concat(REM.map(r => ({ id:r.id, label:r.short, est:estOf(r.id), shown:R.best || R.tried.includes(r.id) })));
   const cur = R.remedy || 'base';
   $('#tried-rows').innerHTML = rows.map(r => `<div class="trow ${r.id===cur?'cur':''} ${r.shown?'':'untried'}"><span class="tl">${r.label}</span><span class="tb" aria-hidden="true">${r.shown?`<i style="width:${pct(r.est)}%"></i>`:''}<em style="left:${pct(cfg.truth)}%"></em></span><span class="tv">${r.shown?cfg.fmt(r.est):'Not tried'}</span></div>`).join('');
-  $('#tried-cap').innerHTML = `<i></i>True value.${R.best?' All five remedies shown.':' Find the best remedy to reveal the ones you did not try.'}`;
+  $('#tried-cap').innerHTML = `<i></i>True value.${R.best?' All five strategies shown.':' Find the best strategy to reveal the ones you did not try.'}`;
 }
 /* Apply a remedy key or a scenario rate array: dim the strip heads not in the sample, outline the ones a remedy brought in, and move the meter. */
 function applyToPanel(round, which, { markNew=false } = {}){
   const cfg = round===1 ? METER1 : METER2;
   let ids, est, status, pct, sub, n = 40, share;
   if (round===1) { const r = simR1(which); ids = r.enrolled; est = ids.length ? r.share : null; status = `${ids.length} of 40 signed up`; pct = `${Math.round(ids.length/40*100)}% of those invited`; sub = `${40-ids.length} never replied`; }
-  else { const r = simR2(which); ids = r.final.ids; est = ids.length ? r.final.mean : null; n = r.invited ? 20 : 40; status = `${ids.length} of ${n} still answering in week 6`; pct = `${Math.round(ids.length/n*100)}% of those ${r.invited?'prompted':'enrolled'}`; sub = `${n-ids.length} ${r.invited?'prompted ':''}people had stopped`; }
+  else { const r = simR2(which); ids = r.final.ids; est = ids.length ? r.final.mean : null; n = r.invited ? 20 : 40; status = `${ids.length} of ${n} still answering in week 6`; pct = `${Math.round(ids.length/n*100)}% of those ${r.invited?'prompted':'enrolled'}`; sub = `${n-ids.length} ${r.invited?'prompted ':''}ravens had stopped`; }
   share = Math.round(ids.length/n*100);
   const baseIds = new Set(markNew ? (round===1 ? simR1('base').enrolled : simR2('base').final.ids) : []);
   let added = 0;
   $$('#pop .head').forEach(h => h.classList.remove('new')); void document.body.offsetWidth;
   $$('#pop .head').forEach((h,i) => { if (!reduced) h.style.transitionDelay = (i*20)+'ms'; const inS = ids.includes(h.dataset.id); const isNew = markNew && inS && !baseIds.has(h.dataset.id); if (isNew) added++; h.classList.toggle('out', !inS); h.classList.toggle('in-s', inS); h.classList.toggle('new', isNew); });
-  if (markNew && added) sub += `, ${added} ${added===1?'person':'people'} brought in by this remedy.`;
+  if (markNew && added) sub += `, ${added} ${added===1?'raven':'ravens'} brought in by this strategy.`;
   const bar = $('#share-bar');
   if (bar) { bar.style.width = share + '%'; $('#sample-pct').textContent = share + '%'; $('#stage-now').textContent = status; $('#share-lbl').textContent = `${status}, ${share}% of those ${round===1?'invited':'enrolled'}`; }
   else { $('#stage-now').textContent = status; $('#sample-pct').textContent = pct; }
@@ -841,9 +848,8 @@ function runSim(round, remedy, { instant=false, onDone } = {}){
   const finish = () => { if (btn) { btn.setAttribute('aria-disabled','false'); btn.innerHTML = `${icon('i-redo')} Run again`; } if (onDone) onDone(); };
   if (round === 1) {
     const res = simR1(remedy);
-    const s0 = () => { if (token!==runToken) return; $('#stage-now').textContent = 'Invitations in the mail'; $('#sample-pct').textContent = ''; $$('#pop .head').forEach(h=>h.classList.remove('out')); sample.innerHTML = '<p class="empty">Waiting for replies</p>'; $('#sample-sub').textContent = 'All 40 invited'; };
     const s1 = () => { if (token!==runToken) return; $('#stage-now').textContent = `${res.enrolled.length} of 40 signed up`; $('#sample-pct').textContent = `${Math.round(res.enrolled.length/40*100)}% of those invited`; showSample(res.enrolled); $('#sample-sub').textContent = `${40-res.enrolled.length} never replied`; setMeter(cfg, res.share); live(`${res.enrolled.length} of 40 signed up, ${Math.round(res.enrolled.length/40*100)} percent. Estimate ${cfg.fmt(res.share)}, true value ${cfg.fmt(cfg.truth)}.`); finish(); };
-    if (quick) { s0(); s1(); } else { s0(); setTimeout(s1, 500); }
+    if (quick) s1(); else setTimeout(s1, 300);
     return res;
   } else {
     const res = simR2(remedy);
@@ -857,7 +863,7 @@ function runSim(round, remedy, { instant=false, onDone } = {}){
         for (let k=1;k<=6;k++){ const li=$('#wk-'+k); li.classList.toggle('done', auto ? k<w : true); li.classList.toggle('now-wk', k===w); }
         $('#week-now').textContent = `Week ${w} of 6`;
         $('#stage-now').textContent = `${wk.ids.length} of ${res.invited?20:40} answered in week ${w}`; $('#sample-pct').textContent = `${Math.round(wk.ids.length/(res.invited?20:40)*100)}% of those ${res.invited?'prompted':'enrolled'}`;
-        $('#sample-sub').textContent = `${(res.invited?20:40)-wk.ids.length} ${res.invited?'prompted ':''}people did not answer this week`;
+        $('#sample-sub').textContent = `${(res.invited?20:40)-wk.ids.length} ${res.invited?'prompted ':''}ravens did not answer this week`;
         setMeter(cfg, wk.ids.length ? wk.mean : null);
       };
       if (auto) show(); else snap(show);
@@ -893,17 +899,17 @@ function render(){
 
 function renderIntro(){
   main.innerHTML = `<div class="col md">
-    <section class="unit"><h2>Let's see who actually answers when a study asks.</h2>
-      <p>A study only ever hears from the people who take part. Let's run two real studies, watch who shows up in the sample, and see what that does to the result.</p></section>
+    <section class="unit"><h2>Let's see who actually responds to a study.</h2>
+      <p>For many studies we are reliant on the people we recruit. Here, we will go through an example of two real studies. We will evaluate who showed up to participate and see how recruitment (or lack thereof) can impact the results.</p></section>
     <section class="card intro-panel"><h3>Your Goal</h3>
-      <p>In this activity, your goal is to <b>spot where a sample starts to drift</b> from the people it is supposed to represent, tell <b>volunteer bias</b> from <b>non-response bias</b>, and <b>choose recruitment fixes</b> that bring the estimate back toward the truth.</p></section>
+      <p>In this activity, your goal is to reference a study and see what happens when the sample of those recruited doesn't accurately reflect the population that the researchers aim to study. You will gain an understanding of the difference between <b>volunteer bias</b> and <b>non-response bias</b>. Then, you will strategize on how you can prevent or mitigate these biases from occurring so that your results are impacted less.</p></section>
     <section class="card intro-panel"><h3>What You're About To Do</h3>
-      <ol>
-        <li>Predict who will sign up when UK Biobank invites nine million adults, run it, compare what other groups would have done to the estimate, and judge what the bias does to the conclusions a researcher can draw.</li>
-        <li>Find where the sample leaked, say why it happened, and name the bias.</li>
-        <li>Choose a recruitment fix and rerun the study until you find the one that closes most of the gap.</li>
-        <li>Do the same for a smartphone study that asks for a weekly check-in, then compare the two leaks side by side.</li>
-      </ol></section>
+      <ol class="numbered">${[
+        'For each type of bias, you will read a study for background and then you will predict who will sign up.',
+        'Run the study, compare the impact of the different options, and make a judgment about how the bias impacts the results.',
+        "Evaluate where you lost or didn't reach your intended population and identify why this loss occurred.",
+        'Choose a strategy to recruit more participants and rerun the study until you find the one that gives you a result closest to the true value.',
+      ].map((t,i)=>`<li><span class="badge" aria-hidden="true">${i+1}</span><span>${t}</span></li>`).join('')}</ol></section>
   </div>`;
 }
 
@@ -914,9 +920,9 @@ function renderPredict(round, bar){
   const body = round===1
     ? 'UK Biobank mails an invitation to every adult aged 40 to 69 near an assessment center. Choose who you expect to sign up.'
     : 'Everyone enrolled in the smartphone study is prompted to complete a symptom check-in each week for six weeks. Choose who you expect to still be answering by week 6.';
-  const pre = round===2 ? `<section class="tone info precontext"><h3>Next Study to Assess</h3><p>Round 2 leaves UK Biobank behind. This is a <b>different study</b> with a different question: a remote smartphone study, where everyone has already enrolled and the question is who keeps answering. Read the study details below before you predict.</p></section>` : '';
+  const pre = round===2 ? `<section class="tone info precontext"><h3>Next Study to Assess</h3><p>This is a <b>different study</b> with a different research question. Here, a group investigates a remote smartphone study where everyone has already enrolled and the researchers wondered who would keep answering the survey. Read the study details below before you predict.</p></section>` : '';
   main.innerHTML = `<div class="col">${bar}${pre}
-    <section class="card icard"><h2>${title}</h2><p>${body}</p><p class="claim"><b>Claim under test:</b> ${round===1?CLAIM1:CLAIM2}</p></section>
+    <section class="card icard"><h2>${title}</h2><p>${body}</p></section>
     <details class="study" open><summary>Study details</summary><div class="body">${round===1?STUDY1:STUDY2}</div></details>
     ${stripHTML(round)}
     <form id="predict-form"><fieldset class="optgroup"><legend>${P.question}</legend></fieldset></form>
@@ -938,12 +944,12 @@ function renderRun(round, bar){
   const R = round===1 ? state.r1 : state.r2;
   const SCEN = round===1 ? SCEN1 : SCEN2;
   const cfg = round===1 ? METER1 : METER2;
-  const title = round===1 ? 'Run the study' : 'Run the six weeks';
+  const title = round===1 ? 'Run the study' : 'Run the study across six weeks';
   const body = round===1
-    ? 'Press run and watch who signs up. Then switch through the other possibilities to see where the estimate would have landed, and judge what the result means.'
-    : 'Press run and watch who keeps answering, week by week. Then switch through the other possibilities to see where the estimate would have landed, and judge what the result means.';
+    ? 'Now let\'s take a moment to run the study and see who signs up. Switch through the other possibilities to see how different samples can alter the results. Then make a judgment on the impact of the sample on the result.'
+    : 'Press run and watch who keeps answering the survey, week by week. Switch through the other possibilities to see how different samples can alter the results. Then make a judgment on the impact of the sample on the result.';
   main.innerHTML = `<div class="col">${bar}
-    <section class="card icard"><h2>${title}</h2><p>${body}</p><p class="claim"><b>Claim under test:</b> ${round===1?CLAIM1:CLAIM2}</p></section>
+    <section class="card icard"><h2>${title}</h2><p>${body}</p></section>
     <details class="study"><summary>Study details</summary><div class="body">${round===1?STUDY1:STUDY2}</div></details>
     ${simPanelsHTML(round, round===1?'Run the study':'Run the six weeks', '', { meterHidden:!R.ran })}
   </div>`;
@@ -957,7 +963,7 @@ function renderRun(round, bar){
   /* Possibilities as pills; the selected one's note sits right under the row. Viewed pills get a check. */
   const drawScen = () => { const s = SCEN.find(x => x.id === (R.scen || 'base'));
     sp.innerHTML = SCEN.map(x => `<button type="button" class="pill" data-id="${x.id}" aria-pressed="${x.id===s.id?'true':'false'}">${x.label}${R.seen.includes(x.id)?`<svg class="ok" aria-hidden="true"><use href="#i-check"/></svg><span class="vh">viewed</span>`:''}</button>`).join('');
-    $('#scen-note').innerHTML = `<div class="tone purple"><span class="phrase">${s.label}.</span> ${s.note}</div>`;
+    $('#scen-note').innerHTML = `<div class="tone purple">${s.note}</div>`;
     const left = SCEN.length - R.seen.length; $('#seen-count').textContent = left ? `View all four to continue: ${left} left.` : 'All four viewed.'; $('#judge-card').hidden = !(R.ran && allSeen()); };
   const showWhatIf = () => { $('#whatif').hidden = !R.ran; $('#judge-card').hidden = !(R.ran && allSeen()); if (R.ran) drawScen(); };
   /* Inference question, graded on selection like the prediction. */
@@ -970,7 +976,6 @@ function renderRun(round, bar){
     J.pick = pick; J.done = true; drawJudge(); renderFooter(); });
   sp.addEventListener('click', e => { const b = e.target.closest('.pill'); if (!b) return; R.scen = b.dataset.id; seen(R.scen); const s = SCEN.find(x => x.id === R.scen); drawScen(); $(`.pill[data-id="${R.scen}"]`, sp).focus({ preventScroll:true }); runSim(round, s.rates === 'base' ? 'base' : s.rates, { instant:true }); renderFooter(); });
   runBtn.setAttribute('aria-disabled', 'false');
-  $('#sample-sub').textContent = round===1 ? 'Press run and watch who signs up.' : 'Press run and watch who answers, week by week.';
   const wks = $('#wks'); if (wks) wks.addEventListener('click', e => { const b = e.target.closest('.wk'); if (!b || b.disabled || !showWeek) return; showWeek(+b.dataset.w); });
   showWhatIf();
   if (R.ran) { const s = SCEN.find(x => x.id === (R.scen || 'base')); runSim(round, s.rates === 'base' ? 'base' : s.rates, { instant:true }); }
@@ -989,13 +994,13 @@ function renderLeak(round, bar){
     const cls = 'st' + (ok?' correct':'') + (ko?' knocked':'') + (sel && !ok && !ko?' selected':'');
     const n = counts[i];
     const mark = ok ? `<svg class="mark" aria-hidden="true"><use href="#i-check"/></svg><span class="vh">correct answer</span>` : ko ? `<svg class="mark" aria-hidden="true"><use href="#i-x"/></svg><span class="vh">previously selected, incorrect</span>` : '';
-    const pick = (!R.leakDone && !ko) ? `<span class="pick">Select this stage</span>` : '';
+    const pick = (!R.leakDone && !ko) ? `<span class="pick">Select this option</span>` : '';
     return `<button type="button" class="${cls}" data-id="${s.id}" aria-pressed="${sel?'true':'false'}" ${(R.leakDone||ko)?'disabled':''}><span class="n">${n}</span><span class="lbl">${s.lbl}</span><span class="note">${s.note}</span>${pick}${mark}</button>`;
   };
   main.innerHTML = `<div class="col">${bar}
-    <section class="card icard"><h2>Find where the sample leaked</h2><p>${round===1?'The cohort came out far healthier than the people invited.':'The study\'s average symptom score ran high.'} In the flow chart, select the stage where the people in the sample stopped looking like the people the study is about, then say why it happened.</p><p class="claim"><b>Claim under test:</b> ${round===1?CLAIM1:CLAIM2}</p></section>
+    <section class="card icard"><h2>Find where we lost some of the sample</h2><p>${round===1?'The cohort estimate shows that your sample is much healthier than the entire population.':'The study\'s average clinical symptom estimate ran high.'} In the flow chart below, select the stage of the experiment where participants in the sample drifted away from the true population. Then assess why this happened.</p></section>
     <details class="study"><summary>Study details</summary><div class="body">${round===1?STUDY1:STUDY2}</div></details>
-    <section class="card leak-card"><h3 id="funnel-label">What the run showed: an estimate of ${cfg.fmt(est)} against a true value of ${cfg.fmt(cfg.truth)}. Where did the leak happen?</h3>
+    <section class="card leak-card"><h3 id="funnel-label">Here's what you found when you ran the study. Your ${round===1?'cohort\'s':'study\'s'} estimate was ${cfg.fmt(est)} while the true value is actually ${cfg.fmt(cfg.truth)}. How did this happen?</h3>
       <div class="funnel" role="group" aria-labelledby="funnel-label" id="funnel">${L.stages.map((s,i)=>tile(s,i)+(i<L.stages.length-1?'<span class="arrow" aria-hidden="true">&rarr;</span>':'')).join('')}</div>
       <div id="leak-feedback" style="margin-top:12px"></div></section>
     <div id="why-wrap" hidden><section class="card leak-card"><form id="why-form"><fieldset class="optgroup"><legend class="qrow"><span>${W.question}</span><span id="why-chip"></span></legend></fieldset>
@@ -1010,7 +1015,7 @@ function renderLeak(round, bar){
     const missing = need.filter(id => !Y.right.includes(id)).length;
     $('#why-chip').innerHTML = Y.done ? `<span class="chip done">${icon('i-check')} All ${need.length} reasons found</span>` : `<span class="chip" role="status">${need.length - missing} of ${need.length} reasons found</span>`;
     $('#why-actions').innerHTML = Y.done ? '' : `<button type="submit" class="btn primary" aria-disabled="${Y.picks.some(id => !Y.right.includes(id)) ? 'false' : 'true'}">${Y.checks ? 'Check again' : 'Check answers'}</button>`;
-    $('#why-feedback').innerHTML = Y.done ? '' : (Y.checks ? `<div class="alert bad" role="status">${icon('i-x')}<div><b>Try again.</b> ${missing===1?'One reason is':missing+' reasons are'} still missing. Select ${missing===1?'it':'them'} from the options that are still open, then check again.</div></div>` : '');
+    $('#why-feedback').innerHTML = Y.done ? '' : (Y.checks ? `<div class="alert bad" role="status">${icon('i-x')}<div>${missing===1?'One reason is':missing+' reasons are'} still missing. Select ${missing===1?'it':'them'} from the options that are still open, then check again!</div></div>` : '');
     $('#leak-takeaway').innerHTML = Y.done ? `<section class="takeaway"><h3>${L.takeawayTitle}</h3><p>${L.takeaway}</p></section>` : '';
   };
   wf.addEventListener('change', e => { if (e.target.name !== 'why') return; const id = e.target.value; if (e.target.checked) { if (!Y.picks.includes(id)) Y.picks.push(id); } else Y.picks = Y.picks.filter(x => x !== id); drawWhy(); });
@@ -1020,10 +1025,10 @@ function renderLeak(round, bar){
   const redraw = () => { $('#funnel').innerHTML = L.stages.map((s,i)=>tile(s,i)+(i<L.stages.length-1?'<span class="arrow" aria-hidden="true">&rarr;</span>':'')).join(''); wire(); };
   const drawFeedback = () => {
     if (R.leakDone) {
-      $('#leak-feedback').innerHTML = `<div class="alert ok" role="status">${icon('i-check')}<div><b>Correct.</b> ${round===1?'Everyone who signed up was assessed. The sample thinned, and skewed, at the moment people decided whether to join.':'The people who enrolled were a fair mix. The sample thinned, and skewed, as people stopped answering.'} Now say why.</div></div>`;
+      $('#leak-feedback').innerHTML = `<div class="alert ok" role="status">${icon('i-check')}<div>${L.correct}</div></div>`;
     } else if (R.leakWrong.length) {
       const last = L.stages.find(s => s.id === R.leakWrong[R.leakWrong.length-1]);
-      $('#leak-feedback').innerHTML = `<div class="alert bad" role="status">${icon('i-x')}<div><b>Not quite.</b> ${last.why} Select another stage.</div></div>`;
+      $('#leak-feedback').innerHTML = `<div class="alert bad" role="status">${icon('i-x')}<div><b>Not quite.</b> ${last.why} Select another option.</div></div>`;
     } else $('#leak-feedback').innerHTML = '';
     drawWhy();
   };
@@ -1039,18 +1044,18 @@ function renderFix(round, bar){
   const REM = round===1 ? REMEDIES1 : REMEDIES2;
   const cfg = round===1 ? METER1 : METER2;
   main.innerHTML = `<div class="col">${bar}
-    <section class="card icard"><h2>Fix it and rerun</h2><p>Choose a recruitment remedy. The ${round===1?'study':'six weeks'} reruns with it and the meter moves. Keep trying until you find the remedy that closes most of the gap, then rank all five for this study.</p><p class="claim"><b>Claim under test:</b> ${round===1?CLAIM1:CLAIM2}</p></section>
+    <section class="card icard"><h2>Resample and rerun</h2><p>Choose a recruitment strategy. The ${round===1?'study reruns':'six weeks rerun'} with it and the meter moves. Keep trying until you find the strategy that closes most of the gap, then rank all five for this study.</p></section>
     <details class="study"><summary>Study details</summary><div class="body">${round===1?STUDY1:STUDY2}</div></details>
-    <section class="card flock-panel fixcard"><div class="pills" role="group" aria-label="Remedy" id="pills"></div><div class="vband" id="vband" hidden></div>
+    <section class="card flock-panel fixcard"><div class="pills" role="group" aria-label="Strategy" id="pills"></div><div class="vband" id="vband" hidden></div>
       <div class="statrow full"><div class="stat"><div class="status" id="stage-now">&nbsp;</div><div class="pct" id="sample-pct"></div></div><div><h4 class="mt">${cfg.title}</h4></div></div><p class="sub vh" id="sample-sub"></p>
-      <div class="runbody"><div><div class="tried"><h4>Estimates so far</h4><div id="tried-rows"></div><p class="cap" id="tried-cap"><i></i>True value</p></div></div>
+      <div class="runbody"><div><div class="tried"><h4>Estimates for each strategy</h4><div id="tried-rows"></div><p class="cap" id="tried-cap"><i></i>True value</p></div></div>
       <div>${meterHTML(cfg, true)}</div></div>
       <p class="evline" id="evline" hidden></p></section>
-    <section class="card rank-card" id="rank-card" hidden><div class="cardhead"><h3>Rank the remedies for this study</h3><span id="rank-chip"></span></div><p class="sub">You found the remedy that closes most of the gap. Now put the remedies in order, from 1 (closes most of the gap) at the top to 5 (closes least) at the bottom: drag a row to a new position, or select a row and then the position it should take. The estimates above are your guide.</p>
+    <section class="card rank-card" id="rank-card" hidden><div class="cardhead"><h3>Rank the potential strategies to mitigate ${round===1?'volunteer':'non-response'} bias for this study</h3><span id="rank-chip"></span></div><p class="lead">You found the strategy that closes most of the gap between your study's estimate and the true value. Now put the strategies in order, from 1 (closes most of the gap) at the top to 5 (closes least) at the bottom. Click and drag a row to a new position. Use the estimates above as your guide.</p>
       <div id="rankwrap"><ol class="rank" id="rank" aria-label="Your ranking"></ol></div>
       <span class="vh" id="rank-live" aria-live="polite"></span>
       <div class="hint-wrap" id="hint-wrap"><button type="button" class="hint-pill" id="hint-btn" aria-expanded="false" aria-controls="hint-card">${icon('i-bulb')} Show Hint</button></div>
-      <div class="hint-card" id="hint-card" hidden><button type="button" class="hx" id="hint-close" aria-label="Close hint">${icon('i-close')}</button><div class="hh">${icon('i-bulb')} Hint:</div><p>In Estimates so far, the closer a bar reaches the dashed true-value line, the better that remedy did. The closest bar goes at the top, the furthest at the bottom.</p></div>
+      <div class="hint-card" id="hint-card" hidden><button type="button" class="hx" id="hint-close" aria-label="Close hint">${icon('i-close')}</button><div class="hh">${icon('i-bulb')} Hint:</div><p>In the Estimates for each strategy section, the closer a bar reaches the dashed true-value line, the better that strategy did. The estimate that is closest to the true value goes at the top and the furthest should be placed at the bottom.</p></div>
       <div id="rank-fb" style="margin-top:12px"></div><div class="actions" id="rank-actions"></div>
       <div class="pickbar" id="pickbar" hidden><p><b>Picked:</b> "<span id="pick-lbl"></span>". Choose its new position.</p><button type="button" class="btn" id="pick-cancel" aria-label="Cancel pick">${icon('i-close')} Cancel</button></div></section>
     <div id="fix-takeaway"></div>
@@ -1059,13 +1064,13 @@ function renderFix(round, bar){
   fitTips(); wireLegend();
   setBasePin(cfg, round===1 ? simR1('base').share : simR2('base').final.mean);
   const drawRankGate = () => { $('#rank-card').hidden = !R.best; };
-  const drawPills = () => { drawRankGate(); pills.innerHTML = REM.map(r => `<button type="button" class="pill" data-id="${r.id}" aria-pressed="${R.remedy===r.id?'true':'false'}" title="${r.text}">${r.short}${R.tried.includes(r.id)?`<svg class="${r.best?'ok':'bad'}" aria-hidden="true"><use href="#${r.best?'i-check':'i-x'}"/></svg><span class="vh">${r.best?'best remedy':'tried, not the best'}</span>`:''}</button>`).join(''); };
+  const drawPills = () => { drawRankGate(); pills.innerHTML = REM.map(r => `<button type="button" class="pill" data-id="${r.id}" aria-pressed="${R.remedy===r.id?'true':'false'}" title="${r.text}">${r.short}${R.tried.includes(r.id)?`<svg class="${r.best?'ok':'bad'}" aria-hidden="true"><use href="#${r.best?'i-check':'i-x'}"/></svg><span class="vh">${r.best?'best strategy':'tried, not the best'}</span>`:''}</button>`).join(''); };
   /* Verdict band across the top of the result card; evidence links as a line at its foot. Both react to the pill just chosen. */
   const showResult = (rem) => { const band = $('#vband'), ev = $('#evline');
     band.hidden = !rem; ev.hidden = !(rem && rem.evidence);
-    if (rem) { band.className = 'vband ' + (rem.best ? 'ok' : 'bad'); band.innerHTML = `${icon(rem.best?'i-check':'i-x')}<div><b>${rem.best?FOUND:AGAIN}</b> <span class="phrase ${rem.tone}">${rem.phrase}</span> ${rem.note}</div>`; ev.innerHTML = rem.evidence ? `<b>Evidence:</b> ${rem.evidence}` : ''; } };
+    if (rem) { band.className = 'vband ' + (rem.best ? 'ok' : 'bad'); band.innerHTML = `${icon(rem.best?'i-check':'i-x')}<div><b>${rem.best?FOUND:AGAIN}</b> <span class="phrase ${rem.tone}">${rem.phrase}</span> ${rem.note}</div>`; ev.innerHTML = rem.evidence ? `<b>Based on:</b> ${rem.evidence}` : ''; } };
   let drawRank = null;   // assigned below, once the ranking panel exists
-  const apply = () => { const rem = REM.find(r => r.id === R.remedy); applyToPanel(round, rem ? rem.id : 'base', { markNew:true }); if (rem) { if (!R.tried.includes(rem.id)) R.tried.push(rem.id); if (rem.best) R.best = true; } else $('#sample-sub').textContent = 'No remedy yet.'; drawTried(round, R, REM); drawPills(); showResult(rem); renderFooter(); if (drawRank) drawRank(); };
+  const apply = () => { const rem = REM.find(r => r.id === R.remedy); applyToPanel(round, rem ? rem.id : 'base', { markNew:true }); if (rem) { if (!R.tried.includes(rem.id)) R.tried.push(rem.id); if (rem.best) R.best = true; } else $('#sample-sub').textContent = 'No strategy yet.'; drawTried(round, R, REM); drawPills(); showResult(rem); renderFooter(); if (drawRank) drawRank(); };
   apply();
   pills.addEventListener('click', e => { const b = e.target.closest('.pill'); if (!b) return; const first = R.tried.length === 0; R.remedy = b.dataset.id; apply(); $(`.pill[data-id="${R.remedy}"]`).focus({ preventScroll:true }); if (first) requestAnimationFrame(() => { const el = $('.fixcard'); if (el) el.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' }); }); });
 
@@ -1113,8 +1118,8 @@ function renderFix(round, bar){
     const right = verdicts ? Object.values(verdicts).filter(Boolean).length : null;
     $('#rank-chip').innerHTML = K.done ? `<span class="chip done">${icon('i-check')} Ranking complete</span>` : (verdicts ? `<span class="chip" role="status">${right} of ${ids.length} right</span>` : '');
     $('#rank-actions').innerHTML = K.done ? '' : `<button type="button" class="btn primary" id="rank-check" aria-disabled="false">${K.checks?'Check again':'Check ranking'}</button>`;
-    $('#rank-fb').innerHTML = K.done ? '' : (verdicts ? `<div class="alert bad" role="status">${icon('i-x')}<div><b>Try again.</b> The remedies marked red are in the wrong position. The right ones are locked in place; use the estimates above to move the rest, then check again.</div></div>` : '');
-    $('#fix-takeaway').innerHTML = K.done ? `<section class="takeaway"><h3>Good strategies, different fits</h3><p>Most of these are sound recruitment strategies, and several of them belong in the same study. Which one does the most depends on where the sample leaked and who is missing. ${round===1?'Here the leak was at sign-up, among people in poorer health, so reaching them through routes they already trust did the most. Compensation and a clearer invitation still helped; more letters did nothing.':'Here the leak was in who kept answering, and the people lost were those with little to report, so cutting the burden of each check-in did the most. Payment and reminders still helped; more participants did nothing.'} In another study, with a different leak, the order could change.</p></section>` : '';
+    $('#rank-fb').innerHTML = K.done ? '' : (verdicts ? `<div class="alert bad" role="status">${icon('i-x')}<div><b>Try again!</b> Reorder the strategies that are marked as incorrect. The rows that you got correct are locked in place. Reference the estimates above to help you decide which row should be placed where, then check again.</div></div>` : '');
+    $('#fix-takeaway').innerHTML = K.done ? `<section class="takeaway"><h3>Good strategies work for different studies</h3><p>The strategies presented all can impact the recruitment of participants. And several can be used simultaneously! Depending on the population and where the study is struggling to retain recruitment, different strategies may be best to prevent ${round===1?'volunteer':'non-response'} bias. ${round===1?'Here the retention occurred at sign-up, among people in poorer health, so reaching them through various routes they already trust helps the most. Compensation and a clearer invitation still helped, but mailing more letters did nothing.':'Here the retention occurred in who kept answering, and the people lost were those with little to report, so cutting the burden of each check-in helps the most. Payment and reminders still can help, but more participants does nothing.'}</p></section>` : '';
     const pb = $('#pickbar'); pb.hidden = !handR; if (handR) $('#pick-lbl').textContent = handR.short;
     if (handR) footerWrap.setAttribute('inert', ''); else footerWrap.removeAttribute('inert');
     const b = $('#rank-check'); if (b) b.addEventListener('click', () => { verdicts = {}; ids.forEach(id => { verdicts[id] = rankOK(id, K.ranks[id]); }); K.checks++; K.done = ids.every(id => verdicts[id]); hand = null; drawRank(); renderFooter(); });
@@ -1166,20 +1171,20 @@ function renderTakeaways(bar){
   main.innerHTML = `<div class="col">${bar}
     <section class="tk" aria-labelledby="tk-h"><h3 class="band" id="tk-h">Takeaway: A bigger sample does not fix a skewed one.</h3>
       <div class="body"><svg class="raven" aria-hidden="true"><use href="#raven-point-left"/></svg>
-        <p>Both leaks leave a sample that differs from the population on the very thing being measured, and more of the same sample only repeats the error with more precision. Half a million UK Biobank volunteers were still about half as likely to die as the people they stood in for.</p>
-        <p>Before trusting an estimate, ask two questions at two stages: who chose to take part, and who kept answering. Compare each group with the people the study is about, and fix the stage that leaked instead of enlarging the study.</p>
+        <p>Both studies show how a sample can differ from the population based on who volunteers to participate in studies and who continues to respond. Being mindful of strategies to mitigate both volunteer and non-response bias can help in recruiting a sample that is more reflective of the population that is being studied.</p>
+        <p>Before trusting your results, ask two questions at two stages: who chose to take part, and who kept answering. Compare each group with the people the study is about, and if you can, address the retention through mitigation strategies.</p>
       </div></section>
-    <section class="card recap-wrap"><h3>Where each study leaked</h3>
+    <section class="card recap-wrap"><h3>Where bias entered the study</h3>
       <div class="recaps">
-        <article class="recap"><div class="band"></div><h4>Round 1: UK Biobank</h4><p class="bias">Volunteer bias, at the sign-up stage</p>
-          <div class="funnel">${tile(40,'Invited','everyone got a letter')}${arrow}${tile(b1.enrolled.length,'Signed up','the healthier ones came','leak')}${arrow}${tile(`${METER1.fmt(b1.share)} <small>vs ${METER1.fmt(R1_TRUTH)}</small>`,'Estimate','share in poorer health','result')}</div>
-          ${bars(METER1, [{ label:'No remedy', est:b1.share }, { label:'Several routes', est:f1.share, cur:true }])}
-          <p><b>Best fix:</b> use several recruitment routes. Different routes reach different people, so the cohort starts to look like the invitation list.</p>
+        <article class="recap"><div class="band"></div><h4>Study 1: UK Biobank</h4><p class="bias">Volunteer bias, at the sign-up stage</p>
+          <div class="funnel">${tile(40,'Invited','Everyone got a letter')}${arrow}${tile(b1.enrolled.length,'Signed up','The healthier ones participated','leak')}${arrow}${tile(`${METER1.fmt(b1.share)} <small>vs ${METER1.fmt(R1_TRUTH)}</small>`,'Estimate','Percent in poorer health, cohort vs. true value','result')}</div>
+          ${bars(METER1, [{ label:'No strategy', est:b1.share }, { label:'Several routes', est:f1.share, cur:true }])}
+          <p><b>Best fix:</b> Use several recruitment routes to recruit participants. Different routes reach different people and can help diversify your sample.</p>
         </article>
-        <article class="recap"><div class="band"></div><h4>Round 2: Smartphone study</h4><p class="bias">Non-response bias, at the follow-up stage</p>
-          <div class="funnel">${tile(40,'Enrolled','a fair mix')}${arrow}${tile(b2.final.ids.length,'Still answering in week 6','the symptomatic ones stayed','leak')}${arrow}${tile(`${METER2.fmt(b2.final.mean)} <small>vs ${METER2.fmt(R2_TRUTH)}</small>`,'Estimate','average symptom score','result')}</div>
-          ${bars(METER2, [{ label:'No remedy', est:b2.final.mean }, { label:'Two questions', est:f2.final.mean, cur:true }])}
-          <p><b>Best fix:</b> cut the check-in to two questions. Lower burden keeps the people with little to report answering.</p>
+        <article class="recap"><div class="band"></div><h4>Study 2: Smartphone study</h4><p class="bias">Non-response bias, at the follow-up stage</p>
+          <div class="funnel">${tile(40,'Enrolled','A fair mix of participants')}${arrow}${tile(b2.final.ids.length,'Still answering in week 6','The symptomatic ones stayed','leak')}${arrow}${tile(`${METER2.fmt(b2.final.mean)} <small>vs ${METER2.fmt(R2_TRUTH)}</small>`,'Estimate','Average symptom score was higher','result')}</div>
+          ${bars(METER2, [{ label:'No strategy', est:b2.final.mean }, { label:'Easier questions', est:f2.final.mean, cur:true }])}
+          <p><b>Best fix:</b> By cutting the check-in to two questions, the researchers help lower the time burden, which helps retain more participants.</p>
         </article>
       </div></section>
   </div>`;
@@ -1195,8 +1200,8 @@ function renderCongrats(){
     <section class="congrats-card"><div class="band"></div>
       <h2>Congratulations, you've completed the activity!</h2>
       <div class="msg">
-        <p>You caught both leaks. UK Biobank invited everyone, and the people who chose to join were healthier than the people who did not. That is <b>volunteer bias</b>. The smartphone study started with a fair mix, and the people who kept answering had more symptoms than the people who stopped. That is <b>non-response bias</b>.</p>
-        <p>Both leave a sample that differs from the population on the very thing being measured. A bigger sample does not fix it. Recruiting through several routes, tracking who is missing, lowering the burden, and compensating people for their time are what move the estimate, and many real studies spring both leaks at once.</p>
+        <p>You saw two instances where volunteer or non-response bias occurred in a simulation of two real studies. The UK Biobank study invited everyone, and the people who chose to join were healthier than the people who did not. That is <b>volunteer bias</b> and is discussed in that paper. The smartphone study started with a fair mix of participants, and the people who kept answering had more symptoms than the people who stopped. That is <b>non-response bias</b>.</p>
+        <p>Both leave a sample that differs from the population on the outcomes of interest being measured. A bigger sample does not automatically mean that these biases will go away. Strategies such as recruiting through several routes, tracking who is missing, lowering the burden of participation, and compensating people for their time can help recruit a more representative sample, and many real studies discuss how these can improve participation.</p>
       </div>
     </section>
     <div class="actions">
@@ -1214,10 +1219,10 @@ function gate(){
   const p = PAGES[state.page];
   if (p.kind==='intro' || p.kind==='congrats' || p.kind==='takeaways') return { ok:true };
   const R = p.round===1 ? state.r1 : state.r2;
-  if (p.kind==='predict') return R.predDone ? { ok:true } : { ok:false, msg:'Choose the correct prediction to continue' };
-  if (p.kind==='run') { if (!R.ran) return { ok:false, msg:'Run the study to continue' }; const SC = p.round===1 ? SCEN1 : SCEN2; if (SC.some(x => !R.seen.includes(x.id))) return { ok:false, msg:'View each possibility to continue' }; if (!R.judge.done) return { ok:false, msg:'Judge the impact on inference to continue' }; return { ok:true }; }
-  if (p.kind==='leak') { if (!R.leakDone) return { ok:false, msg:'Find where the leak happened to continue' }; if (!R.why.done) return { ok:false, msg:'Find every reason for the leak to continue' }; return { ok:true }; }
-  if (p.kind==='fix') { if (!R.best) return { ok:false, msg:'Find the remedy that closes most of the gap to continue' }; if (!R.rank.done) return { ok:false, msg:'Rank the remedies correctly to continue' }; return { ok:true }; }
+  if (p.kind==='predict') return R.predDone ? { ok:true } : { ok:false, msg:'Choose the correct option to continue' };
+  if (p.kind==='run') { if (!R.ran) return { ok:false, msg:'Run the study to continue' }; const SC = p.round===1 ? SCEN1 : SCEN2; if (SC.some(x => !R.seen.includes(x.id))) return { ok:false, msg:'View each option to continue' }; if (!R.judge.done) return { ok:false, msg:'Choose the correct option to continue' }; return { ok:true }; }
+  if (p.kind==='leak') { if (!R.leakDone) return { ok:false, msg:'Select a box to continue' }; if (!R.why.done) return { ok:false, msg:'Select every reason to continue' }; return { ok:true }; }
+  if (p.kind==='fix') { if (!R.best) return { ok:false, msg:'Find the strategy that closes most of the gap to continue' }; if (!R.rank.done) return { ok:false, msg:'Rank the strategies correctly to continue' }; return { ok:true }; }
   return { ok:true };
 }
 function renderFooter(){
