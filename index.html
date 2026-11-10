@@ -384,7 +384,7 @@ legend.qrow .chip{align-self:center}
 .funnel .st.leak{border-color:var(--green);border-style:solid;background:var(--green-tint)}
 .funnel .st.result .n{color:var(--amber-text)}
 .funnel .st.result .n small{font-size:var(--fs-sm);font-weight:400;color:var(--text)}
-.leak-card h3{font-size:var(--h4)}
+.leak-card h3{font-size:var(--h4);text-wrap:pretty}
 
 /* Takeaways page */
 .recap-wrap h3{margin-bottom:12px}
@@ -626,21 +626,31 @@ function simR1(remedy){
 }
 /* Round 2: remote smartphone study, weekly symptom check-ins. Truth = average symptom score of everyone enrolled = 2.5. */
 const R2_TRUTH = GROUPS.reduce((a,g)=>a+g.score*g.n,0) / N;
-const RETAIN = {              // weekly retention, by symptom group (people with the condition stay longer)
-  base:     [.55,.68,.80,.92,.98],
-  more:     [.55,.68,.80,.92,.98],
-  random:   [.55,.68,.80,.92,.98],
-  remind:   [.67,.78,.86,.95,.99],
-  pay:      [.76,.83,.89,.95,.99],
-  shorten:  [.85,.88,.91,.95,.98],
+/* Week 1 is itself a survey, and its non-response is where the bias enters: most of the flock never answers the first check-in, and the ravens who do are mostly the symptomatic ones, so the week 1 average already runs high. Only two or three more are lost across weeks 2 to 6. WEEK1 is the share of each symptom group that answers week 1; RETAIN is the share of answerers who keep answering each later week. A what-if possibility carries its own pair. */
+const WEEK1 = {
+  base:     [.10,.167,.33,.67,1],
+  more:     [.10,.167,.33,.67,1],
+  random:   [.10,.167,.33,.67,1],
+  remind:   [.30,.42,.56,.83,1],
+  pay:      [.50,.58,.78,1,1],
+  shorten:  [.80,.83,.89,1,1],
+};
+const RETAIN = {
+  base:     [.80,.76,1,1,1],
+  more:     [.80,.76,1,1,1],
+  random:   [.80,.76,1,1,1],
+  remind:   [.93,.95,1,1,1],
+  pay:      [.95,.97,1,1,1],
+  shorten:  [.97,.98,1,1,1],
 };
 function simR2(remedy){
-  const r = Array.isArray(remedy) ? remedy : (RETAIN[remedy] || RETAIN.base);
+  const r = (remedy && remedy.r) || RETAIN[remedy] || RETAIN.base;
+  const w1 = (remedy && remedy.w1) || WEEK1[remedy] || WEEK1.base;
   const invited = remedy === 'random' ? new Set(FLOCK.filter((_,i)=>i%2===0).map(x=>x.id)) : null;
   const weeks = [];
   for (let w=1; w<=6; w++) {
     const ids = [];
-    GROUPS.forEach((g,gi) => { const pool = FLOCK.filter(x=>x.g===gi && (!invited || invited.has(x.id))); pool.slice(0, Math.round(pool.length*0.9*Math.pow(r[gi], w-1))).forEach(x=>ids.push(x.id)); });
+    GROUPS.forEach((g,gi) => { const pool = FLOCK.filter(x=>x.g===gi && (!invited || invited.has(x.id))); pool.slice(0, Math.round(pool.length*w1[gi]*Math.pow(r[gi], w-1))).forEach(x=>ids.push(x.id)); });
     const mean = ids.length ? ids.reduce((a,id)=>a+gOf(id).score,0)/ids.length : 0;
     weeks.push({ ids, mean });
   }
@@ -712,17 +722,17 @@ const LEAK1 = {
   ],
   correct: '<b>Correct.</b> Everyone who signed up was assessed. The sample became skewed based on who was interested in participating.',
   takeawayTitle: 'This is an example of volunteer bias',
-  takeaway: 'Only people who choose to take part are counted in the final sample. Even though the UK Biobank is enormous, its participants are much healthier than the population. Even when trying to recruit a larger sample, volunteer bias can still occur. The 94.5% who never replied to the letter are non-response too. Volunteer bias and non-response bias are the same selection seen from opposite sides: one names who came in, the other who stayed out.',
+  takeaway: 'Only people who choose to take part are counted in the final sample. Even though the UK Biobank is enormous, its participants are much healthier than the population. Even when trying to recruit a larger sample, volunteer bias can still occur. The 94.5% who never replied to the letter are non-response too. Volunteer bias and non-response bias go hand in hand, where one bias shows who self-selected to participate while the other shows who never responded from a specific group of individuals.',
 };
 const LEAK2 = {
   stages: [
     { id:'enrol',    lbl:'Enrolled',  note:'Everyone in the study', why:'The participants who enrolled were a fair mix of symptom levels.' },
-    { id:'week1',    lbl:'Answered in week 1', note:'Nearly everyone', why:'Week 1 heard from nearly everyone and consisted of a diverse sample that matched the population.' },
-    { id:'followup', lbl:'Answered the week 6 survey', note:'The participants who responded that week', correct:true },
+    { id:'week1',    lbl:'Answered the week 1 survey', note:'The participants who responded', correct:true },
+    { id:'followup', lbl:'Answered the week 6 survey', note:'The participants still responding', why:'The gap is widest here, but the skew began with the very first survey. The ravens answering in week 6 are the ones who were already overrepresented in week 1.' },
   ],
-  correct: '<b>Correct!</b> As time went on, the responses from only those who kept responding skewed the sample.',
+  correct: '<b>Correct!</b> The very first survey already missed the least symptomatic ravens, so the ravens who answered no longer matched the ravens enrolled. Every later week built on that skew.',
   takeawayTitle: 'This is an example of non-response bias',
-  takeaway: 'The people who answer differ systematically from the people who do not. Here, the people who stopped were the ones with fewer symptoms, which increased the average symptom severity. For studies, sometimes our data are influenced simply by who responds vs. who doesn\'t. This does not need six weeks. Any survey, even a one-time one, has non-response bias when the people who do not answer, because they were not reached, could not answer, or chose not to, differ from the people who do. When non-response repeats wave after wave in a longitudinal study, it is also called attrition, and a separate activity in this unit looks at that case in detail.',
+  takeaway: 'The people who answer differ systematically from the people who do not. Here, the people who did not answer were the ones with fewer symptoms, which increased the average symptom severity from the very first survey. For studies, sometimes our data are influenced simply by who responds vs. who doesn\'t. This does not need six weeks. Any survey, even a one-time one, has non-response bias when the people who do not answer, because they were not reached, could not answer, or chose not to, differ from the people who do. When non-response repeats wave after wave in a longitudinal study, it is also called attrition, and a separate activity in this unit looks at that case in detail.',
 };
 // Why the sample skewed: select all that apply, checked on demand, retry until every correct reason is found.
 const WHY1 = { question: 'Why did the sample skew at sign-up? Select all that apply.', options: [
@@ -731,8 +741,8 @@ const WHY1 = { question: 'Why did the sample skew at sign-up? Select all that ap
   { id:'interest',text:'People drawn to health research tend to be health-conscious already', correct:true, why:'Correct. The UK Biobank study found that most participants were healthier overall. They reported healthier habits, which could have skewed the sample.' },
   { id:'rules',   text:'The eligibility rules excluded people in poor health', why:'There were no health-based exclusions. Those with poorer health simply didn\'t volunteer for the study.' },
 ] };
-const WHY2 = { question: 'Why did the least symptomatic people stop answering? Select all that apply.', options: [
-  { id:'nothing', text:'People with nothing to report may have felt little reason to keep opening the app', correct:true, why:'For the healthy controls, it may have seemed tedious to continue responding to the survey and inputting the same results.' },
+const WHY2 = { question: 'Why did the least symptomatic people not answer? Select all that apply.', options: [
+  { id:'nothing', text:'People with nothing to report may have felt little reason to open the app', correct:true, why:'For the healthy controls, it may have seemed tedious to continue responding to the survey and inputting the same results.' },
   { id:'cost',    text:'Every check-in costs time and attention, and those with symptoms are more invested in the outcomes of the study', correct:true, why:'People tracking real symptoms are more likely to put in more effort when a study is assessing or asking questions related to those symptoms.' },
   { id:'prompts', text:'The app stopped prompting people who had no symptoms', why:'Everyone was prompted every week, but the participants were the ones who stopped responding.' },
   { id:'paid',    text:'People with symptoms were paid more to respond', why:'Nobody in this study was paid by symptom level. When there was payment offered, it was the same for everyone.' },
@@ -769,10 +779,10 @@ const SCEN1 = [
   { id:'nobody',    label:'Almost nobody will respond', rates:[.05,.05,.05,.05,.05], note:`If only a handful of invitees responded, then the researchers wouldn't have been able to make meaningful comparisons as they would be ${dt('underpowered')}.` },
 ];
 const SCEN2 = [
-  { id:'mix',         label:'A mix of participants much like at the beginning of the study', rates:[.80,.80,.80,.80,.80], note:'If the loss of participants were unrelated to symptoms, the week 6 average would sit closer to the true value.' },
-  { id:'base', label:'Mostly the participants with the most clinical symptoms (what happened)', rates:'base', note:'The least symptomatic stopped responding first, so the average climbs week by week simply based on who is responding to the survey (those with more clinical symptoms).' },
-  { id:'fewest',      label:'Mostly the participants with the fewest symptoms', rates:[.98,.92,.80,.68,.55], note:'If the symptomatic left the study, then the average would decrease.' },
-  { id:'nobody',      label:'Almost nobody responded', rates:[.40,.40,.40,.40,.40], note:'If the sample size is too small, then the researchers can\'t make meaningful comparisons.' },
+  { id:'mix',         label:'A mix of participants much like at the beginning of the study', rates:{ w1:[.35,.35,.35,.35,.35], r:[.95,.95,.95,.95,.95] }, note:'If the loss of participants were unrelated to symptoms, the week 6 average would sit closer to the true value.' },
+  { id:'base', label:'Mostly the participants with the most clinical symptoms (what happened)', rates:'base', note:'The least symptomatic were the least likely to answer from the very first survey, so the average starts high and climbs week by week simply based on who is responding (those with more clinical symptoms).' },
+  { id:'fewest',      label:'Mostly the participants with the fewest symptoms', rates:{ w1:[1,.67,.33,.167,.10], r:[.97,.97,.97,.97,.97] }, note:'If the symptomatic left the study, then the average would decrease.' },
+  { id:'nobody',      label:'Almost nobody responded', rates:{ w1:[.05,.05,.05,.05,.05], r:[.5,.5,.5,.5,.5] }, note:'If the sample size is too small, then the researchers can\'t make meaningful comparisons.' },
 ];
 const IMPACT = [
   { key:'q1', study:'UK Biobank', question:'Our study mimics the UK Biobank cohort, where healthier invitees responded. How does the cohort\'s estimate compare to the true value?',
@@ -788,7 +798,7 @@ const IMPACT = [
       { id:'b', text:'We can\'t tell if the trend is true or based on those who were lost from the study', correct:true },
       { id:'c', text:'The result is accurate because the study is large and people did keep responding over time', why:'Having a large sample size is good, but if it\'s not representative of the population you are trying to study, then it makes interpretation of the results tricky.' },
     ],
-    feedback: 'The study started with a large sample, and over time participants stopped responding. Those who kept responding were those who had more severe symptoms. Pratap and colleagues saw this pattern across eight studies, where people with clinical conditions stayed while controls left, and most studies could not keep a representative sample of the population.' },
+    feedback: 'The study tried to enroll a fair mix of participants, but from the first survey the people who responded were those with more severe symptoms, and the gap widened each week. Pratap and colleagues saw this pattern across eight studies, where people with clinical conditions stayed while controls left, and most studies could not keep a representative sample of the population.' },
 ];
 const AGAIN = 'This helped but isn\'t the best option. Try another strategy.';
 const FOUND = 'Best strategy found. Try the others too if you like, then continue.';
@@ -1074,7 +1084,7 @@ function renderRun(round, bar){
   const title = round===1 ? 'Run the study' : 'Run the study across six weeks';
   const body = round===1
     ? 'Now let\'s take a moment to run the study and see who signs up. Switch through the other possibilities to see how different samples can alter the results. Then make a judgment on the impact of the sample on the result.'
-    : 'Press run and watch who keeps answering the survey, week by week. Switch through the other possibilities to see how different samples can alter the results. Then make a judgment on the impact of the sample on the result.';
+    : 'Press run and watch who answers the survey, week by week. Switch through the other possibilities to see how different samples can alter the results. Then make a judgment on the impact of the sample on the result.';
   main.innerHTML = `<div class="col">${bar}
     <section class="card icard"><h2>${title}</h2><p>${body}</p></section>
     <details class="study"><summary>Study details</summary><div class="body">${round===1?STUDY1:STUDY2}</div></details>
@@ -1127,7 +1137,7 @@ function renderLeak(round, bar){
   main.innerHTML = `<div class="col">${bar}
     <section class="card icard"><h2>Find where we lost some of the sample</h2><p>${round===1?'The cohort estimate shows that your sample is much healthier than the entire population.':'The study\'s average clinical symptom estimate ran high.'} In the flow chart below, select the stage of the experiment where participants in the sample drifted away from the true population. Then assess why this happened.</p></section>
     <details class="study"><summary>Study details</summary><div class="body">${round===1?STUDY1:STUDY2}</div></details>
-    <section class="card leak-card"><h3 id="funnel-label">Here's what you found when you ran the study. Your ${round===1?'cohort\'s':'study\'s'} estimate was ${cfg.fmt(est)} while the true value is actually ${cfg.fmt(cfg.truth)}. How did this happen?</h3>
+    <section class="card leak-card"><h3 id="funnel-label">Here's what you found when you ran the study. Your ${round===1?'cohort\'s':'study\'s'} estimate was ${cfg.fmt(est)} while the true value is actually ${cfg.fmt(cfg.truth)}. Where did the study lose the most participants?</h3>
       <div class="funnel" role="group" aria-labelledby="funnel-label" id="funnel">${L.stages.map((s,i)=>tile(s,i)+(i<L.stages.length-1?'<span class="arrow" aria-hidden="true">&rarr;</span>':'')).join('')}</div>
       <div id="leak-feedback" style="margin-top:12px"></div></section>
     <div id="why-wrap" hidden><section class="card leak-card"><form id="why-form"><fieldset class="optgroup"><legend class="qrow"><span>${W.question}</span><span id="why-chip"></span></legend></fieldset>
@@ -1299,7 +1309,7 @@ function renderTakeaways(bar){
     <section class="tk" aria-labelledby="tk-h"><h3 class="band" id="tk-h">Takeaway: A bigger sample does not fix a skewed one.</h3>
       <div class="body"><svg class="raven" aria-hidden="true"><use href="#raven-point-left"/></svg>
         <p>Both studies show how a sample can differ from the population based on who volunteers to participate in studies and who continues to respond. Being mindful of strategies to mitigate both volunteer and non-response bias can help in recruiting a sample that is more reflective of the population that is being studied.</p>
-        <p>Before trusting your results, ask two questions at two stages: who chose to take part, and who kept answering. Compare each group with the people the study is about, and if you can, address the loss through mitigation strategies.</p>
+        <p>Before trusting your results, ask two questions at two stages: who chose to take part, and who answered. Compare each group with the people the study is about, and if you can, address the loss through mitigation strategies.</p>
       </div></section>
     <section class="card recap-wrap"><h3>Where bias entered the study</h3>
       <div class="recaps">
@@ -1308,8 +1318,8 @@ function renderTakeaways(bar){
           ${bars(METER1, [{ label:'No strategy', est:b1.share }, { label:'Several routes', est:f1.share, cur:true }])}
           <p><b>Best fix:</b> Use several recruitment routes to recruit participants. Different routes reach different people and can help diversify your sample.</p>
         </article>
-        <article class="recap"><div class="band"></div><h4>Study 2: Smartphone study</h4><p class="bias">Non-response bias, at the follow-up stage</p>
-          <div class="funnel">${tile(40,'Enrolled','A fair mix of participants')}${arrow}${tile(b2.final.ids.length,'Answered the week 6 survey','The symptomatic ones responded','leak')}${arrow}${tile(`${METER2.fmt(b2.final.mean)} <small>vs ${METER2.fmt(R2_TRUTH)}</small>`,'Estimate','Average symptom score was higher','result')}</div>
+        <article class="recap"><div class="band"></div><h4>Study 2: Smartphone study</h4><p class="bias">Non-response bias, from the first survey</p>
+          <div class="funnel">${tile(40,'Enrolled','A fair mix of participants')}${arrow}${tile(b2.weeks[0].ids.length,'Answered the week 1 survey','The symptomatic ones responded','leak')}${arrow}${tile(`${METER2.fmt(b2.final.mean)} <small>vs ${METER2.fmt(R2_TRUTH)}</small>`,'Estimate','Average symptom score was higher','result')}</div>
           ${bars(METER2, [{ label:'No strategy', est:b2.final.mean }, { label:'Easier questions', est:f2.final.mean, cur:true }])}
           <p><b>Best fix:</b> By cutting the check-in to two questions, the researchers help lower the time burden, which helps retain more participants.</p>
         </article>
@@ -1327,7 +1337,7 @@ function renderCongrats(){
     <section class="congrats-card"><div class="band"></div>
       <h2>Congratulations, you've completed the activity!</h2>
       <div class="msg">
-        <p>You saw two instances where volunteer or non-response bias occurred in a simulation of two real studies. The UK Biobank study invited everyone, and the people who chose to join were healthier than the people who did not. That is <b>volunteer bias</b> and is discussed in that paper. The smartphone study started with a fair mix of participants, and the people who kept answering had more symptoms than the people who stopped. That is <b>non-response bias</b>.</p>
+        <p>You saw two instances where volunteer or non-response bias occurred in a simulation of two real studies. The UK Biobank study invited everyone, and the people who chose to join were healthier than the people who did not. That is <b>volunteer bias</b> and is discussed in that paper. The smartphone study started with a fair mix of participants, and the people who answered had more symptoms than the people who did not. That is <b>non-response bias</b>.</p>
         <p>Both leave a sample that differs from the population on the outcomes of interest being measured. A bigger sample does not automatically mean that these biases will go away. Strategies such as recruiting through several routes, tracking who is missing, lowering the burden of participation, and compensating people for their time can help recruit a more representative sample, and many real studies discuss how these can improve participation.</p>
       </div>
     </section>
