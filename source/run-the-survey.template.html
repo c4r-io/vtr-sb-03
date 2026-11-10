@@ -622,17 +622,17 @@ const LEAK1 = {
   ],
   correct: '<b>Correct.</b> Everyone who signed up was assessed. The sample became skewed based on who was interested in participating.',
   takeawayTitle: 'This is an example of volunteer bias',
-  takeaway: 'Only people who choose to take part are counted in the final sample. Even though the UK Biobank is enormous, its participants are much healthier than the population. Even when trying to recruit a larger sample, volunteer bias can still occur.',
+  takeaway: 'Only people who choose to take part are counted in the final sample. Even though the UK Biobank is enormous, its participants are much healthier than the population. Even when trying to recruit a larger sample, volunteer bias can still occur. The 94.5% who never replied to the letter are non-response too. Volunteer bias and non-response bias are the same selection seen from opposite sides: one names who came in, the other who stayed out.',
 };
 const LEAK2 = {
   stages: [
     { id:'enrol',    lbl:'Enrolled',  note:'Everyone in the study', why:'The participants who enrolled were a fair mix of symptom levels.' },
     { id:'week1',    lbl:'Answered in week 1', note:'Nearly everyone', why:'Week 1 heard from nearly everyone and consisted of a diverse sample that matched the population.' },
-    { id:'followup', lbl:'Still answering in week 6', note:'The participants who kept responding', correct:true },
+    { id:'followup', lbl:'Answered the week 6 survey', note:'The participants who responded that week', correct:true },
   ],
   correct: '<b>Correct!</b> As time went on, the responses from only those who kept responding skewed the sample.',
   takeawayTitle: 'This is an example of non-response bias',
-  takeaway: 'The people who answer differ systematically from the people who do not. Here, the people who stopped were the ones with fewer symptoms, which increased the average symptom severity. For studies, sometimes our data are influenced simply by who responds vs. who doesn\'t.',
+  takeaway: 'The people who answer differ systematically from the people who do not. Here, the people who stopped were the ones with fewer symptoms, which increased the average symptom severity. For studies, sometimes our data are influenced simply by who responds vs. who doesn\'t. This does not need six weeks. Any survey, even a one-time one, has non-response bias when the people who do not answer, because they were not reached, could not answer, or chose not to, differ from the people who do.',
 };
 // Why the sample skewed: select all that apply, checked on demand, retry until every correct reason is found.
 const WHY1 = { question: 'Why did the sample skew at sign-up? Select all that apply.', options: [
@@ -845,7 +845,7 @@ function applyToPanel(round, which, { markNew=false } = {}){
   const cfg = round===1 ? METER1 : METER2;
   let ids, est, status, pct, sub, n = 40, share;
   if (round===1) { const r = simR1(which); ids = r.enrolled; est = ids.length ? r.share : null; status = `${ids.length} of 40 signed up`; pct = `${Math.round(ids.length/40*100)}% of those invited`; sub = `${40-ids.length} never replied`; }
-  else { const r = simR2(which); ids = r.final.ids; est = ids.length ? r.final.mean : null; n = r.invited ? 20 : 40; status = `${ids.length} of ${n} still answering in week 6`; pct = `${Math.round(ids.length/n*100)}% of those ${r.invited?'prompted':'enrolled'}`; sub = `${n-ids.length} ${r.invited?'prompted ':''}ravens had stopped`; }
+  else { const r = simR2(which); ids = r.final.ids; est = ids.length ? r.final.mean : null; n = r.invited ? 20 : 40; status = `${ids.length} of ${n} answered the week 6 survey`; pct = `${Math.round(ids.length/n*100)}% of those ${r.invited?'prompted':'enrolled'}`; sub = `${n-ids.length} ${r.invited?'prompted ':''}ravens did not respond`; }
   share = Math.round(ids.length/n*100);
   const baseIds = new Set(markNew ? (round===1 ? simR1('base').enrolled : simR2('base').final.ids) : []);
   let added = 0;
@@ -1156,7 +1156,7 @@ function renderFix(round, bar){
     $('#rank-chip').innerHTML = K.done ? `<span class="chip done">${icon('i-check')} Ranking complete</span>` : (verdicts ? `<span class="chip" role="status">${right} of ${ids.length} right</span>` : '');
     $('#rank-actions').innerHTML = K.done ? '' : `<button type="button" class="btn primary" id="rank-check" aria-disabled="false">${K.checks?'Check again':'Check ranking'}</button>`;
     $('#rank-fb').innerHTML = K.done ? '' : (verdicts ? `<div class="alert bad" role="status">${icon('i-x')}<div><b>Try again!</b> Reorder the strategies that are marked as incorrect. The rows that you got correct are locked in place. Reference the estimates above to help you decide which row should be placed where, then check again.</div></div>` : '');
-    $('#fix-takeaway').innerHTML = K.done ? `<section class="takeaway"><h3>Good strategies work for different studies</h3><p>The strategies presented all can impact the recruitment of participants. And several can be used simultaneously! Depending on the population and where the study is struggling to retain recruitment, different strategies may be best to prevent ${round===1?'volunteer':'non-response'} bias. ${round===1?'Here the retention occurred at sign-up, among people in poorer health, so reaching them through various routes they already trust helps the most. Compensation and a clearer invitation still helped, but mailing more letters did nothing.':'Here the retention occurred in who kept answering, and the people lost were those with little to report, so cutting the burden of each check-in helps the most. Payment and reminders still can help, but more participants does nothing.'}</p></section>` : '';
+    $('#fix-takeaway').innerHTML = K.done ? `<section class="takeaway"><h3>Good strategies work for different studies</h3><p>The strategies presented all can impact the recruitment of participants. And several can be used simultaneously! Depending on the population and where the study is struggling to retain recruitment, different strategies may be best to prevent ${round===1?'volunteer':'non-response'} bias. ${round===1?'Here the retention occurred at sign-up, among people in poorer health, so reaching them through various routes they already trust helps the most. Compensation and a clearer invitation still helped, but mailing more letters did nothing.':'Here the non-response was among the people with little to report, so cutting the burden of each check-in helps the most. Payment and reminders still can help, but more participants does nothing.'}</p></section>` : '';
     const pb = $('#pickbar'); pb.hidden = !handR; if (handR) $('#pick-lbl').textContent = handR.short;
     if (handR) footerWrap.setAttribute('inert', ''); else footerWrap.removeAttribute('inert');
     const b = $('#rank-check'); if (b) b.addEventListener('click', () => { verdicts = {}; ids.forEach(id => { verdicts[id] = rankOK(id, K.ranks[id]); }); K.checks++; K.done = ids.every(id => verdicts[id]); hand = null; drawRank(); renderFooter(); });
@@ -1219,7 +1219,7 @@ function renderTakeaways(bar){
           <p><b>Best fix:</b> Use several recruitment routes to recruit participants. Different routes reach different people and can help diversify your sample.</p>
         </article>
         <article class="recap"><div class="band"></div><h4>Study 2: Smartphone study</h4><p class="bias">Non-response bias, at the follow-up stage</p>
-          <div class="funnel">${tile(40,'Enrolled','A fair mix of participants')}${arrow}${tile(b2.final.ids.length,'Still answering in week 6','The symptomatic ones stayed','leak')}${arrow}${tile(`${METER2.fmt(b2.final.mean)} <small>vs ${METER2.fmt(R2_TRUTH)}</small>`,'Estimate','Average symptom score was higher','result')}</div>
+          <div class="funnel">${tile(40,'Enrolled','A fair mix of participants')}${arrow}${tile(b2.final.ids.length,'Answered the week 6 survey','The symptomatic ones responded','leak')}${arrow}${tile(`${METER2.fmt(b2.final.mean)} <small>vs ${METER2.fmt(R2_TRUTH)}</small>`,'Estimate','Average symptom score was higher','result')}</div>
           ${bars(METER2, [{ label:'No strategy', est:b2.final.mean }, { label:'Easier questions', est:f2.final.mean, cur:true }])}
           <p><b>Best fix:</b> By cutting the check-in to two questions, the researchers help lower the time burden, which helps retain more participants.</p>
         </article>
