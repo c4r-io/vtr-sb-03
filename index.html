@@ -114,6 +114,7 @@ details.study .body .claim b{font-weight:600}
 .unit{background:var(--unit-tint);border-radius:12px;padding:20px 24px;position:relative;overflow:hidden}
 .unit::before{content:"";position:absolute;left:0;right:0;top:0;height:6px;background:var(--unit)}
 .unit h2{margin-bottom:8px}
+.unit p+p{margin-top:10px}
 .intro-panel h3{margin-bottom:8px}
 .intro-panel .numbered{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
 .intro-panel .numbered li{display:flex;gap:12px;align-items:flex-start}
@@ -313,13 +314,24 @@ legend.qrow .chip{align-self:center}
 .tip > button{all:unset;cursor:help;width:24px;height:24px;border-radius:50%;color:var(--muted);display:inline-flex;align-items:center;justify-content:center}
 .tip > button:focus-visible{outline:3px solid var(--purple);outline-offset:2px}
 .tip > button svg{width:22px;height:22px}
-.tip .bubble{position:absolute;left:0;bottom:calc(100% + 8px);background:#202020;color:#fff;font-size:var(--fs-sm);font-weight:300;line-height:1.4;padding:8px 10px;border-radius:8px;width:min(340px,80vw);z-index:6;display:none;outline:1px solid #fff}
+.tip .bubble{position:absolute;left:0;bottom:calc(100% + 8px);background:#202020;color:#fff;font-size:var(--fs-sm);font-weight:300;line-height:1.4;padding:8px 34px 8px 10px;border-radius:8px;width:min(340px,80vw);z-index:6;display:none;outline:1px solid #fff;text-align:left}
+/* Close control inside the bubble, so a learner on a touch screen can always dismiss it (same pattern as vtr-sb-01's axis definitions). */
+.tip .tclose{all:unset;cursor:pointer;position:absolute;top:4px;right:4px;width:26px;height:26px;border-radius:50%;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:1.2rem;line-height:1}
+.tip .tclose:hover{background:rgba(255,255,255,.18)}
+.tip .tclose:focus-visible{outline:2px solid #fff;outline-offset:1px}
+/* Defined term: the word itself opens the definition. Dotted purple underline, same bubble and touch behaviour as the (i) tooltips. */
+.tip.dterm{display:inline;position:relative}
+.tip.dterm > .ttrig{all:unset;cursor:help;font:inherit;color:inherit;border-bottom:2px dotted var(--purple);text-decoration:none;display:inline}
+.tip.dterm > .ttrig:hover,.tip.dterm > .ttrig[aria-expanded="true"]{color:var(--purple)}
+.tip.dterm > .ttrig:focus-visible{outline:3px solid var(--purple);outline-offset:2px;border-radius:2px}
+.tip.dterm .bubble{font-weight:400}
 .tip.r .bubble{left:auto;right:0}
 .tip.r .bubble::after{left:auto;right:6px}
 .readout .tip > button{width:20px;height:20px;margin-right:2px}
 .readout .tip > button svg{width:18px;height:18px}
 .tip .bubble::after{content:"";position:absolute;left:6px;top:100%;border:7px solid transparent;border-top-color:#202020}
-.tip:hover .bubble,.tip:focus-within .bubble{display:block}
+@media (hover:hover){.tip:hover .bubble,.tip:focus-within .bubble{display:block}}
+.tip.open .bubble{display:block}
 .meter .track{position:relative;height:14px;background:var(--panel);border:1px solid var(--rule);border-radius:7px;margin:34px 10px 30px}
 .meter .tag{position:absolute;transform:translateX(-50%);font-size:var(--fs-xs);white-space:nowrap;transition:left .6s;font-weight:600}
 .meter .tag.truth{top:-32px;color:var(--takeaway)}
@@ -646,13 +658,21 @@ const DOI_HELLER = 'https://doi.org/10.1016/j.cct.2014.08.004';
 const DOI_UYBICO = 'https://doi.org/10.1007/s11606-007-0126-3';
 const DOI_GROVES = 'https://doi.org/10.1093/poq/nfl033';
 const ext = (href, text) => `<a href="${href}" target="_blank" rel="noopener">${text}<span class="vh"> (opens in a new tab)</span></a>`;
+/* A defined term inline in running text: the term is the trigger, the definition is the bubble. */
+const DEFS = {
+  underpowered: 'When a study has too few participants to detect a statistically significant effect.',
+  'median retention': 'The number of days that half of the participants were still responding. A median of 5.5 days means that half stopped responding by day 6.',
+  population: 'Everyone who the study is aiming to learn more about.',
+  sample: 'The people who actually participated in the study.',
+};
+const dt = (term, shown=term) => { const id = 'def-' + term.replace(/\W+/g, '-'); return `<span class="tip dterm"><button type="button" class="ttrig" aria-describedby="${id}" aria-expanded="false">${shown}</button><span class="bubble" role="tooltip" id="${id}">${DEFS[term]}<button type="button" class="tclose" aria-label="Hide definition">&times;</button></span></span>`; };
 const STUDY1 = `<p><b>UK Biobank</b> mailed invitations to about 9.2 million adults aged 40 to 69 living near one of 22 assessment centers in England, Wales, or Scotland. Only about <b>5.5%</b> responded to take part in the study. The purpose of this study was to compare how common diseases and health factors were between the cohort and publicly available data for the general population, and to assess who responded to the study compared to those who didn't.</p>
 <p>${ext(DOI_FRY, 'Fry and colleagues (2017)')} compared the people who joined the study with the general population of the same ages. They found that those who joined:</p>
 <ul><li>were less likely to be obese, to smoke, or to drink alcohol daily, and had fewer self-reported health conditions;</li><li>were more likely to be older, female, and living in less socioeconomically deprived areas;</li><li>had lower rates of mortality: for those aged 70 to 74, all-cause mortality was 46% lower in men and 56% lower in women than in the general population.</li></ul>
 <p class="claim"><b>What the study claims:</b> ${CLAIM1}</p>`;
 const STUDY2 = `<p><b>Remote smartphone studies</b> enroll people through an app and ask them to complete check-ins over weeks or months. ${ext(DOI_PRATAP, 'Pratap and colleagues (2020)')} conducted and pooled eight studies run between 2014 and 2019, covering more than <b>100,000 participants</b> and about 3.5 million remote assessments, to investigate who would continue to participate in the study.</p>
 <p>They found that who kept responding was not random:</p>
-<ul><li>median retention across the studies was only <b>5.5 days</b> (range 2 to 26 days);</li><li>people who <b>had the clinical condition</b> being studied stayed about 7 days longer than controls;</li><li>older participants stayed about 4 days longer;</li><li>compensation added about 22 days (in the one study that offered it) and referral by a clinician added about 40 days;</li><li>most of the studies could not recruit a sample that matched the population demographically or regionally.</li></ul>
+<ul><li>${dt('median retention')} across the studies was only <b>5.5 days</b> (range 2 to 26 days);</li><li>people who <b>had the clinical condition</b> being studied stayed about 7 days longer than controls;</li><li>older participants stayed about 4 days longer;</li><li>compensation added about 22 days (in the one study that offered it) and referral by a clinician added about 40 days;</li><li>most of the studies could not recruit a sample that matched the population demographically or regionally.</li></ul>
 <p class="claim"><b>What the study claims:</b> ${CLAIM2}</p>
 <p>Here the 40 ravens stand in for everyone enrolled in one such study. Every one of them is asked to complete a symptom check-in each week for six weeks. Each face shows that raven's true symptom level.</p>`;
 const UNUSED_EVIDENCE = `<p>The size of each remedy's effect in this prototype is illustrative. The direction comes from these sources:</p>
@@ -702,7 +722,7 @@ const LEAK2 = {
   ],
   correct: '<b>Correct!</b> As time went on, the responses from only those who kept responding skewed the sample.',
   takeawayTitle: 'This is an example of non-response bias',
-  takeaway: 'The people who answer differ systematically from the people who do not. Here the people who stopped were the ones with fewer symptoms, which increased the average symptom severity. For studies, sometimes our data are influenced simply by who responds vs. who doesn\'t.',
+  takeaway: 'The people who answer differ systematically from the people who do not. Here, the people who stopped were the ones with fewer symptoms, which increased the average symptom severity. For studies, sometimes our data are influenced simply by who responds vs. who doesn\'t.',
 };
 // Why the sample skewed: select all that apply, checked on demand, retry until every correct reason is found.
 const WHY1 = { question: 'Why did the sample skew at sign-up? Select all that apply.', options: [
@@ -746,7 +766,7 @@ const SCEN1 = [
   { id:'mix',       label:'A mix of invitees will respond', rates:[.42,.42,.42,.42,.42], note:'If sign-up were more representative of the population, then the cohort estimate would be closer to the true value.' },
   { id:'base', label:'Mostly the healthier invitees (what happened)', rates:'base', note:'Since mostly healthier invitees responded, the cohort estimate underestimates those with poorer health compared to the true population.' },
   { id:'sickest',   label:'Mostly the least healthy invitees', rates:[.10,.20,.40,.70,.90], note:'If mostly those in poorer health responded, then it is likely that we would see the opposite result, where the cohort estimate would overstate those who are in poorer health.' },
-  { id:'nobody',    label:'Almost nobody will respond', rates:[.05,.05,.05,.05,.05], note:'If only a handful of invitees responded, then the researchers wouldn\'t have been able to make meaningful comparisons as they would be underpowered.' },
+  { id:'nobody',    label:'Almost nobody will respond', rates:[.05,.05,.05,.05,.05], note:`If only a handful of invitees responded, then the researchers wouldn't have been able to make meaningful comparisons as they would be ${dt('underpowered')}.` },
 ];
 const SCEN2 = [
   { id:'mix',         label:'A mix of participants much like at the beginning of the study', rates:[.80,.80,.80,.80,.80], note:'If the loss of participants were unrelated to symptoms, the week 6 average would sit closer to the true value.' },
@@ -805,7 +825,7 @@ const stripHTML = (round) => `<section class="card strip flock-panel"><div class
 const wireLegend = () => { const d = $('#legend'); if (d) d.addEventListener('toggle', () => { state.legendOpen = d.open; }); };
 /* The meter. The truth and estimate pins are buttons: hovering or focusing one outlines the ravens it counts. */
 /* A small (i) with a tooltip. `side` is 'r' when the bubble should open leftward (anchored to its right edge). */
-const tipHTML = (id, label, text, side='l') => `<span class="tip ${side}"><button type="button" aria-describedby="${id}" aria-label="${label}">${icon('i-info')}</button><span class="bubble" role="tooltip" id="${id}">${text}</span></span>`;
+const tipHTML = (id, label, text, side='l') => `<span class="tip ${side}"><button type="button" class="ttrig" aria-describedby="${id}" aria-label="${label}" aria-expanded="false">${icon('i-info')}</button><span class="bubble" role="tooltip" id="${id}">${text}<button type="button" class="tclose" aria-label="Hide definition">&times;</button></span></span>`;
 function meterHTML(cfg, notitle=false){
   return `<div class="meter ${notitle?'notitle':''}" id="meter"><div class="mtitle"><h4>${cfg.title}</h4></div>
     <div class="readout"><span>${tipHTML('tip-truth', 'What the true value is', cfg.tipTruth)}True value <b>${cfg.fmt(cfg.truth)}</b></span><span id="m-est-read">${tipHTML('tip-est', 'What the estimate is', cfg.tipEst)}Estimate <b>not yet run</b></span><span id="m-gap-read"></span></div>
@@ -816,8 +836,22 @@ function meterHTML(cfg, notitle=false){
     <div class="ticks">${cfg.ticks.map(t=>`<span>${t}</span>`).join('')}</div></div>`;
 }
 /* Keep a tooltip bubble inside the viewport: flip it to open leftward if its right edge would overflow. */
+/* Tooltip behaviour. Hover and keyboard focus open a bubble on devices that can hover (CSS). A tap or click on the (i) toggles it open on every device,
+   and the bubble's close button, a tap on the bubble, Escape, or a tap anywhere else closes it, so a learner on a touch screen is never stuck in one. */
+function closeTips(except=null){ $$('.tip.open').forEach(t => { if (t !== except) { t.classList.remove('open'); const b = $('.ttrig', t); if (b) b.setAttribute('aria-expanded', 'false'); } }); }
 function fitTips(root=document){
-  $$('.tip', root).forEach(t => { const show = () => { const b = $('.bubble', t); t.classList.remove('r'); const r = b.getBoundingClientRect(); if (r.right > window.innerWidth - 8) t.classList.add('r'); }; t.addEventListener('mouseenter', show); t.addEventListener('focusin', show); });
+  $$('.tip', root).forEach(t => {
+    if (t.dataset.wired) return; t.dataset.wired = '1';
+    const trig = $('.ttrig', t), bubble = $('.bubble', t);
+    const fit = () => { t.classList.remove('r'); const r = bubble.getBoundingClientRect(); if (r.right > window.innerWidth - 8) t.classList.add('r'); };
+    const open = () => { closeTips(t); t.classList.add('open'); trig.setAttribute('aria-expanded', 'true'); fit(); };
+    const close = () => { t.classList.remove('open'); trig.setAttribute('aria-expanded', 'false'); };
+    t.addEventListener('mouseenter', fit); t.addEventListener('focusin', fit);
+    trig.addEventListener('click', e => { e.stopPropagation(); if (t.classList.contains('open')) close(); else open(); });
+    bubble.addEventListener('click', e => { e.stopPropagation(); close(); });
+    t.addEventListener('keydown', e => { if (e.key === 'Escape' && t.classList.contains('open')) { e.stopPropagation(); close(); trig.focus({ preventScroll:true }); } });
+  });
+  if (!document.body.dataset.tipsWired) { document.body.dataset.tipsWired = '1'; document.addEventListener('click', () => closeTips()); document.addEventListener('keydown', e => { if (e.key === 'Escape') closeTips(); }); }
 }
 /* Keeps a floating tag inside the track: its centre is pushed in by half its own width at either end. */
 function keepIn(tag, pctVal){ const track = tag.parentElement; const tw = tag.offsetWidth, w = track ? track.offsetWidth : 0; if (!tw || !w) { tag.style.left = pctVal + '%'; return; } const half = tw / 2 / w * 100; tag.style.left = Math.max(half, Math.min(100 - half, pctVal)) + '%'; }
@@ -984,15 +1018,18 @@ function render(){
     else if (p.kind === 'takeaways') renderTakeaways(bar);
     else renderFix(p.round, bar);
   }
+  fitTips();
   renderFooter();
 }
 
 function renderIntro(){
   main.innerHTML = `<div class="col md">
     <section class="unit"><h2>Let's see who actually responds to a study.</h2>
-      <p>For many studies we are reliant on the people we recruit. Here, we will go through an example of two real studies. We will evaluate who showed up to participate and see how recruitment (or lack thereof) can impact the results.</p></section>
+      <p>For many studies we are reliant on the people we recruit. Here, we will go through an example of two real studies. We will evaluate who showed up to participate and see how recruitment (or lack thereof) can impact the results.</p>
+      <p><b>Volunteer bias</b> is the type of bias that arises when only those who volunteer to participate in a study are included, and this decision, ability, or willingness to participate is typically related to the research question.</p>
+      <p><b>Non-response bias</b> arises when participants who do not respond to a survey or study differ systematically from those who do.</p></section>
     <section class="card intro-panel"><h3>Your Goal</h3>
-      <p>In this activity, your goal is to reference a study and see what happens when the sample of those recruited doesn't accurately reflect the population that the researchers aim to study. You will gain an understanding of the difference between <b>volunteer bias</b> and <b>non-response bias</b>. Then, you will strategize on how you can prevent or mitigate these biases from occurring so that your results are impacted less.</p></section>
+      <p>In this activity, your goal is to reference a study and see what happens when the ${dt('sample')} of those recruited doesn't accurately reflect the ${dt('population')} that the researchers aim to study. You will gain an understanding of the difference between <b>volunteer bias</b> and <b>non-response bias</b>. Then, you will strategize on how you can prevent or mitigate these biases from occurring so that your results are impacted less.</p></section>
     <section class="card intro-panel"><h3>What You're About To Do</h3>
       <ol class="numbered">${[
         'For each type of bias, you will read a study for background and then you will predict who will sign up.',
@@ -1053,7 +1090,7 @@ function renderRun(round, bar){
   /* Possibilities as pills; the selected one's note sits right under the row. Viewed pills get a check. */
   const drawScen = () => { const s = SCEN.find(x => x.id === (R.scen || 'base'));
     sp.innerHTML = SCEN.map(x => `<button type="button" class="pill" data-id="${x.id}" aria-pressed="${x.id===s.id?'true':'false'}">${x.label}${R.seen.includes(x.id)?`<svg class="ok" aria-hidden="true"><use href="#i-check"/></svg><span class="vh">viewed</span>`:''}</button>`).join('');
-    $('#scen-note').innerHTML = `<div class="tone purple">${s.note}</div>`;
+    $('#scen-note').innerHTML = `<div class="tone purple">${s.note}</div>`; fitTips($('#scen-note'));
     const left = SCEN.length - R.seen.length; $('#seen-count').textContent = left ? `View all four to continue: ${left} left.` : 'All four viewed.'; $('#judge-card').hidden = !(R.ran && allSeen()); };
   const showWhatIf = () => { $('#whatif').hidden = !R.ran; $('#judge-card').hidden = !(R.ran && allSeen()); if (R.ran) drawScen(); };
   /* Inference question, graded on selection like the prediction. */
